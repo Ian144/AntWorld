@@ -81,7 +81,7 @@ namespace AntWorldGui
 
                 btnStartStop.Content = "Stop";
 
-
+                // generates an infinite sequence of antworld instances
                 var antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(
                                     config.AntsPerNest,
                                     config.NumNests,

@@ -16,7 +16,7 @@ let isStuckDetectionFactor = 0.2
 
 let UpdateLoc (ant:Ant) newLoc = 
   
-    let prevLocs2 = newLoc :: (ListTruncate (isStuckLookback - 1) ant.prevLocs)
+    let prevLocs2 = newLoc :: (List.truncate (isStuckLookback - 1) ant.prevLocs)
     {ant with prevLocs = prevLocs2; loc = newLoc}
 
 
@@ -28,8 +28,6 @@ let IsStuck (ant:Ant) =
         distMoved < (antStepSize *  (float isStuckLookback) * isStuckDetectionFactor)
     else
         false
-
-
 
 
 
@@ -75,7 +73,7 @@ let MoveTowardsRnd =  MoveTowardsRndImpl OneInTen
 let surroundingStepDirections = let vecX = [-1.0<distance>; 0.0<distance>; 1.0<distance> ]
                                 let vecY = vecX
                                 let tmp1 = [for xx in vecX do for yy in vecY do yield {dx = xx; dy = yy}]
-                                let tmp2 = ListTruncate 4 tmp1 @ ListSkip 5 tmp1  // remove the center, only want surrounding steps
+                                let tmp2 = List.truncate 4 tmp1 @ List.skip 5 tmp1  // remove the center, only want surrounding steps
                                 List.map (fun mv -> LocationFuncs.ConstrainToStepSize mv antStepSize) tmp2 
 
 
@@ -103,7 +101,7 @@ let MoveFollowingTrail (ant:Ant) (aw:AntWorld) stepSize: Location*MoveVec =
     // filter out surrounding locations closest to the nest unless current location is the nest
     let surLocDistances = surLocs |> List.map (fun loc -> (loc, (LocationFuncs.CalcDistance loc ant.nestLoc) )) |> List.sortBy (fun (_,dist) -> 1.0/dist) 
     let surLocDistances2 = if ant.loc <> ant.nestLoc then 
-                                surLocDistances |> ListTruncate 4 |> Seq.toList |> List.map (fun (loc,_) -> loc) 
+                                surLocDistances |> List.truncate 4 |> Seq.toList |> List.map (fun (loc,_) -> loc) 
                             else
                                 surLocDistances |> List.map (fun (loc,_) -> loc)  
     // sort remaining locations in order of highest pheromone level first

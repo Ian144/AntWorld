@@ -68,5 +68,5 @@ let QuantiseLocation (loc:Location)  quantiseLevel : Location =
 let CalcSurroundingLocDirections stepSize = let vecX = [-1.0<distance>; 0.0<distance>; 1.0<distance> ]
                                             let vecY = vecX
                                             let tmp1 = [for xx in vecX do for yy in vecY do yield {dx = xx; dy = yy}]
-                                            let tmp2 = ListTruncate 4 tmp1 @ ListSkip 5 tmp1  // remove the center, only want surrounding steps
+                                            let tmp2 = List.truncate 4 tmp1 @ List.skip 5 tmp1  // remove the center, only want surrounding steps
                                             List.map (fun mv -> ConstrainToStepSize mv stepSize) tmp2
