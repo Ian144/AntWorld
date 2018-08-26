@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Types.fs" />
+    <Compile Include="Utilities.fs" />
+    <Compile Include="LocationFuncs.fs" />
+    <Compile Include="CollisionFuncs.fs" />
+    <Compile Include="PheromoneTrails.fs" />
+    <Compile Include="AntMovementFuncs.fs" />
+    <Compile Include="FoodFuncs.fs" />
+    <Compile Include="NestFuncs.fs" />
+    <Compile Include="AntWorldFuncs.fs" />
+    <Compile Include="AntWorldSequenceGen.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSharpx.Core" Version="1.8.32" />
+  </ItemGroup>
+
+</Project>
