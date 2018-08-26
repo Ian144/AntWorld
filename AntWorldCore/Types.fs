@@ -88,6 +88,7 @@ type Nest = { Ants      : Ant list
 
 
 // experiment showed that the immutable Map O(logN) was a bottleneck, replaced with mutable Dictionary O(1) on average
-type Trail = System.Collections.Generic.Dictionary<Location, float>
+//type Trail = System.Collections.Generic.Dictionary<Location, float>
+type Trail = Map<Location,float>
 
 type AntWorld = { nests:Nest list; foodItems:FoodItem list; trails:Trail; obstacles:Obstacle list }

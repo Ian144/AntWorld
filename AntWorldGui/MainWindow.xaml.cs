@@ -93,6 +93,8 @@ namespace AntWorldGui
 
                 _running = true;
 
+
+                //todo: ensure all drawing is in the gui thread, which is undoubtadly not this thread
                 var ts = new ThreadStart(() =>
                 {
                     while (_running)
@@ -126,8 +128,7 @@ namespace AntWorldGui
             return _rnd.NextDouble() < 0.05;
         }
 
-
-
+        
         private void DrawAntWorld(Types.AntWorld aw)
         {
             Action aa = () =>

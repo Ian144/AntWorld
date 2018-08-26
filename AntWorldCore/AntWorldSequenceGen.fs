@@ -79,7 +79,8 @@ let MakeAntWorldSeq (numAntsPerNest:int)  (numNests:int) (numFoodItems:int) (num
     // make the '1st frame' antWorld, subsequent frames are created from the previous one
     let initialAntWorld = {  nests = nests; 
                              foodItems = foodItems;
-                             trails = Trail();
+                             //trails = Trail();
+                             trails = Map.empty<Location,float>;
                              obstacles = obstacles }
 
     Seq.unfold OptUpdateWorld initialAntWorld

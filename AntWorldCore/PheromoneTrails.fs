@@ -54,16 +54,14 @@ let GetNearestUncoveredPheromoneLocation (obtacles: Obstacle list) (loc:Location
 
 
 
-// Trail is a mutable hashmap for performance reasons, 
 let UpdateTrail (trail:Trail) (obs: Obstacle list) (loc:Location) : Trail = 
     let optLoc2 = GetNearestUncoveredPheromoneLocation obs loc 
     match optLoc2 with
     | None -> trail
     | Some loc2 ->  let found, oldVal = trail.TryGetValue loc2
                     match found with
-                    | false -> trail.[loc2] <- 1.0  
-                    | true -> trail.[loc2] <- 1.0 + oldVal  
-                    trail
+                    | false -> trail.Add (loc2, 1.0 )
+                    | true  -> trail.Add (loc2, (1.0 + oldVal))
 
 
 let GetPheromoneLevel loc (trail:Trail) = 
@@ -85,26 +83,9 @@ let FadePheremone level =
 
 
 let FadeTrails (trails:Trail) : Trail  = 
-    let trails2 = Trail() // cant modify a map in a foreach loop, even if its just the value being modified,
+    let mutable trails2 = trails // considering mutability that does not escape a function to be ok
     for (kvp:KeyValuePair<Location,float>) in trails do 
         let v2 = FadePheremone kvp.Value
         if v2 > 0.0 then
-            trails2.[kvp.Key] <- v2
-    trails
-
-
-// make this cache coherent, using an array of value types
-// will false sharing be an issue?
-let FadeTrailsP (trails:Trail) : Trail = 
-    let xx = trails.Select (fun kvp -> kvp.Key, kvp.Value) 
-    let yy = xx.ToArray()
-
-
-    //xx |> Array.Parallel.iter (fun kvp -> printf "%A" kvp)
-
-    let trails2 = Trail() // cant modify a map in a foreach loop, even if its just the value being modified,
-    for (kvp:KeyValuePair<Location,float>) in trails do 
-        let v2 = FadePheremone kvp.Value
-        if v2 > 0.0 then
-            trails2.[kvp.Key] <- v2
-    trails
+            trails2 <- trails2.Add (kvp.Key, v2)
+    trails2

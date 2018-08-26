@@ -1,0 +1,34 @@
+﻿
+
+
+ensure drawing is in the gui thread
+
+in this style
+	when to use mutable, immutable and concurrent collections    
+		immutable for snapshots and understandability/safety generally
+		concurrent for producer consumer
+		mutable only use within a function
+		using mutable types, that don't escape a function, is a safe as using immutable types
+​
+
+remove need for fsharpx
+core 100% immutable
+allow going backwards in time
+
+
+
+
+
+
+why am i doing this?
+~~~~~~~~~~~~~~~~~~~~
+
+to revive my F#
+to have antworld available for experimenting with profilers and coding techniques (immutablity, HAMT etc)
+
+
+
+
+don't forget
+~~~~~~~~~~~~~
+roslyn immutableHashMap has bug in Count()
