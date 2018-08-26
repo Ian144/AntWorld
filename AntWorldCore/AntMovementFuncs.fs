@@ -101,7 +101,7 @@ let MoveFollowingTrail (ant:Ant) (aw:AntWorld) stepSize: Location*MoveVec =
     // filter out surrounding locations closest to the nest unless current location is the nest
     let surLocDistances = surLocs |> List.map (fun loc -> (loc, (LocationFuncs.CalcDistance loc ant.nestLoc) )) |> List.sortBy (fun (_,dist) -> 1.0/dist) 
     let surLocDistances2 = if ant.loc <> ant.nestLoc then 
-                                surLocDistances |> List.truncate 4 |> Seq.toList |> List.map (fun (loc,_) -> loc) 
+                                surLocDistances |> List.truncate 4 |> List.map (fun (loc,_) -> loc) 
                             else
                                 surLocDistances |> List.map (fun (loc,_) -> loc)  
     // sort remaining locations in order of highest pheromone level first

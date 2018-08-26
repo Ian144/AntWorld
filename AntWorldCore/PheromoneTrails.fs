@@ -64,7 +64,7 @@ let GetPheromoneLevel loc (trail:Trail) =
 
 // pheremone trails fade with time if not renewed
 let FadePheremone level = 
-    let fadeFactor = 0.999 //todo: pass fadeFactor in as a parameter
+    let fadeFactor = 0.95 //todo: pass fadeFactor in as a parameter
     let level2 = level * fadeFactor
     if level2 > 0.1 then //todo: pass the 0.1 in as a parameter
         level2

@@ -1,6 +1,14 @@
 ﻿
 
 
+
+
+
+
+remove need for fsharpx
+	don't use monadic state updater
+
+
 ensure drawing is in the gui thread
 
 in this style
@@ -10,8 +18,6 @@ in this style
 		mutable only use within a function
 		using mutable types, that don't escape a function, is a safe as using immutable types
 ​
-
-remove need for fsharpx
 core 100% immutable
 allow going backwards in time
 

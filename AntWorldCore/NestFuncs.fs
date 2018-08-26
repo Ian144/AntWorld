@@ -161,16 +161,16 @@ let rec MonadicUpdateAnts (ants : Ant list) =
 
 
 let AntsUseUpFood (ants:Ant List) : Ant List = 
-    let seqAnts = seq{  for ant in ants do
-                        let ant' = {ant with foodStored = ant.foodStored - 1<food>} 
-                        if (ant'.foodStored < AntFoodSearchEndThreshold) then
-                            let ant'' = match ant'.state with 
-                                        | InNest | ReturnToNestHungary | ReturnToNestWithFood _ | GettingUnStuck _ -> ant'
-                                        | SearchingForFood _ | DetectedFood _ | FollowingTrail _ -> {ant' with state = ReturnToNestHungary}
-                            yield ant''
-                        else
-                            yield ant'}
-    Seq.toList seqAnts  
+    [   for ant in ants do
+        let ant' = {ant with foodStored = ant.foodStored - 1<food>} 
+        if (ant'.foodStored < AntFoodSearchEndThreshold) then
+            let ant'' = match ant'.state with 
+                        | InNest | ReturnToNestHungary | ReturnToNestWithFood _ | GettingUnStuck _ -> ant'
+                        | SearchingForFood _ | DetectedFood _ | FollowingTrail _ -> {ant' with state = ReturnToNestHungary}
+            yield ant''
+        else
+            yield ant']
+    
        
 
 let UpdateNest2 (nest:Nest) (antWorld:AntWorld) : (Nest*AntWorld) = 

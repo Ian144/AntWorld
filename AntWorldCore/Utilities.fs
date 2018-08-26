@@ -3,10 +3,10 @@
 
 
 let FirstOrNone xs = 
-    if Seq.isEmpty xs then
+    if List.isEmpty xs then
        None
     else
-       Some (Seq.head xs)
+       Some (List.head xs)
 
 
 // apply a raw float conversion function, e.g. System.Math.Floor to a float<unit_of_measure>

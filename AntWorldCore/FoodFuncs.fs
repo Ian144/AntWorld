@@ -37,7 +37,7 @@ let HasReachedFood loc foodItem =
 
 // lazyily return the first food item detected (or none)
 let FoodDetected (loc:Location) (foodItems:FoodItem list) = 
-    foodItems |> Seq.filter (IsFoodDetected loc) |> FirstOrNone
+    foodItems |> List.filter (IsFoodDetected loc) |> FirstOrNone
 
 
 
