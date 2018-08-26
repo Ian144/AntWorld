@@ -43,11 +43,11 @@ let private MakeRandObstacle (getRandLoc:Unit -> Location) : Obstacle =
 
 // make obstacles that do not cover any food items or nests
 let private MakeObstacles numObstacles foodItems nests (getRandLoc:Unit -> Location) =   
-        seq {1 .. numObstacles} |> 
-        Seq.map (fun _ -> MakeRandObstacle getRandLoc) |>
-        Seq.filter (NoOcclusionFoodObstacle foodItems) |> 
-        Seq.filter (NoOcclusionObstacleNest nests) |> 
-        Seq.toList
+    seq {1 .. numObstacles} |> 
+    Seq.map (fun _ -> MakeRandObstacle getRandLoc) |>
+    Seq.filter (NoOcclusionFoodObstacle foodItems) |> 
+    Seq.filter (NoOcclusionObstacleNest nests) |> 
+    Seq.toList
 
 
 let private MakeNest (numAnts:int) getRandLoc =
@@ -67,7 +67,6 @@ let private MakeNests (numNests:int) (numAntsPerNest:int) (getRandLoc:Unit -> Lo
 
 
 let MakeAntWorldSeq (numAntsPerNest:int)  (numNests:int) (numFoodItems:int) (numObstacles:int) (range:int)  =
-
     let GetRandLocationRange = fun() -> let fRange = float range
                                         let gr () = LanguagePrimitives.FloatWithMeasure<distance> (fRange * (randGen.NextDouble() * 2.0 - 1.0) )
                                         {x = gr(); y = gr()}

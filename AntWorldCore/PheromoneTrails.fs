@@ -15,20 +15,10 @@ open Microsoft.FSharp.Collections
 let trailLocQuantisation = 4.0
 
 
-
 let TrailDetected (trail:Trail) loc = 
     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
     let found, _ = trail.TryGetValue loc2
     found
-
-
-
-//let moveVecToSurroundingPherormonLocations = CalcSurroundingLocDirections (trailLocQuantisation * 1.0<distance>)
-//
-//let GetSurroundingLocations (loc:Location) : Location list = 
-//    let loc2 = QuantiseLocation loc trailLocQuantisation
-//    moveVecToSurroundingPherormonLocations |> List.map  (fun mv -> {x = loc2.x + mv.dx; y = loc2.y + mv.dy})
-
 
 
 let GetSurroundingLocations (loc:Location) : Location list = 

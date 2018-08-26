@@ -22,7 +22,6 @@ allow going backwards in time
 
 why am i doing this?
 ~~~~~~~~~~~~~~~~~~~~
-
 to revive my F#
 to have antworld available for experimenting with profilers and coding techniques (immutablity, HAMT etc)
 
