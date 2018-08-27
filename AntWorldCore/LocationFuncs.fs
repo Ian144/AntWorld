@@ -61,9 +61,6 @@ let QuantiseLocation (loc:Location)  quantiseLevel : Location =
       {x = xf; y = yf}
 
 
-
-
-
 // calculate the move vector for 8 surrounding (above, above right, right, below right etc) locations with a given stepSize
 let CalcSurroundingLocDirections stepSize = let vecX = [-1.0<distance>; 0.0<distance>; 1.0<distance> ]
                                             let vecY = vecX

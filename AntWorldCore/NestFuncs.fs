@@ -17,8 +17,6 @@ let AntFoodLevelSearchStart = AntMaxFoodCapacity / 2
 let AntFoodSearchEndThreshold =  10<food>
 
 
-
-
 let FeedResidentAnt (ant:Ant) (nest:Nest) = 
     let antFoodRoom = AntMaxFoodCapacity - ant.foodStored
     let availableFood = nest.FoodStore
@@ -28,7 +26,6 @@ let FeedResidentAnt (ant:Ant) (nest:Nest) =
     let ant2 = {ant with foodStored = amountToEat + ant.foodStored ; state = AntState.SearchingForFood {dx = 0.0<distance>; dy = 0.0<distance>}} 
     let nest2 = {nest with FoodStore = nest.FoodStore - amountToEat}
     (ant2, nest2)
-
 
 
 let UpdateAntDetectedFood (ant:Ant) (foodItem:FoodItem) (antWorld:AntWorld) (stepSize:float<distance>) = 
@@ -43,8 +40,8 @@ let UpdateAntDetectedFood (ant:Ant) (foodItem:FoodItem) (antWorld:AntWorld) (ste
         (ant2, antWorld)
 
 
-
 let numGetUnstuckAttempts = 64 // todo: make the number of 'try to get unstuck' steps configurable
+
 
 let UpdateAntReturnToNestHungary (ant:Ant) (antWorld:AntWorld) (stepSize:float<distance>) : (Ant*AntWorld) = 
     if IsStuck ant then

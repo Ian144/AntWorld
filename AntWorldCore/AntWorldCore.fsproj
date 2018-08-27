@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="State.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Utilities.fs" />
     <Compile Include="LocationFuncs.fs" />
@@ -15,10 +16,6 @@
     <Compile Include="NestFuncs.fs" />
     <Compile Include="AntWorldFuncs.fs" />
     <Compile Include="AntWorldSequenceGen.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FSharpx.Core" Version="1.8.32" />
   </ItemGroup>
 
 </Project>

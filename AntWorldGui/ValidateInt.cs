@@ -14,8 +14,7 @@ namespace AntWorldGui
                 return new Nothing<int>();
             }
 
-            int res;
-            if (!int.TryParse(str, out res))
+            if (!int.TryParse(str, out int res))
                 return new Nothing<int>();
 
             return new Just<int>(res);

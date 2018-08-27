@@ -10,13 +10,10 @@ let isStuckLookback = 10
 let isStuckDetectionFactor = 0.2
 
 
-
-
 let UpdateLoc (ant:Ant) newLoc = 
   
     let prevLocs2 = newLoc :: (List.truncate (isStuckLookback - 1) ant.prevLocs)
     {ant with prevLocs = prevLocs2; loc = newLoc}
-
 
 
 let IsStuck (ant:Ant) = 
@@ -28,16 +25,15 @@ let IsStuck (ant:Ant) =
         false
 
 
-
-
 let private randGen = System.Random()
 
+
 let OneInTen() = randGen.NextDouble() < 0.1
+
 
 let GetRandomMoveVec () =
     let GetRandDist () = (randGen.NextDouble() * 2.0 * antStepSize - antStepSize)
     {dx = GetRandDist (); dy = GetRandDist ()}
-    
 
 
 // move ant at curLoc towards destination
@@ -45,7 +41,6 @@ let MoveTowards (destLoc:Location) (curLoc:Location) (stepSize:float<distance>) 
     let distance = LocationFuncs.CalcDistance destLoc curLoc
     let angle = LocationFuncs.CalcAngle destLoc curLoc
     if distance >= stepSize then
-        let distance2 = distance - stepSize
         { x = curLoc.x + stepSize * cos(angle) ; y = curLoc.y + stepSize * sin(angle) }
     else
         destLoc
