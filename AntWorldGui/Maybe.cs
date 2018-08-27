@@ -11,7 +11,6 @@ namespace AntWorldGui
         T Value();
     }   
 
-
     public class Nothing<T> : Maybe<T>
     {
         public override string ToString()

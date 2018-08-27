@@ -4,10 +4,6 @@
 
 namespace AntWorldGui
 {
-
-
-
-
     public class VisibleEntityCollection
     {
         public VisibleEntityCollection()

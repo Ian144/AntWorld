@@ -62,20 +62,13 @@ let GetPheromoneLevel loc (trail:Trail) =
     | true -> level
 
 
+
 // pheremone trails fade with time if not renewed
-let FadePheremone level = 
-    let fadeFactor = 0.95
-    let level2 = level * fadeFactor
-    if level2 > 0.1 then
-        level2
-    else
-        0.0
-
-
 let FadeTrails (trails:Trail) : Trail  = 
-    let mutable trails2 = trails // considering mutability that does not escape a function to be ok
-    for (kvp:KeyValuePair<Location,float>) in trails do 
-        let v2 = FadePheremone kvp.Value
-        if v2 > 0.0 then
-            trails2 <- trails2.Add (kvp.Key, v2)
-    trails2
+    let xs = trails |> Map.toList
+    let ys =
+        [   for loc,pheremoneLevel in xs do  
+            let pheremoneLevel2 = pheremoneLevel * 0.998
+            if pheremoneLevel2 > 0.1 then
+                yield loc, pheremoneLevel2            ]
+    ys |> Map.ofList

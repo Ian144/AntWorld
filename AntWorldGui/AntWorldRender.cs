@@ -60,15 +60,6 @@ namespace AntWorldGui
                 return;
 
 
-            //var pen = new Pen
-            //{
-            //    Thickness = 1,
-            //    Brush = System.Windows.Media.Brushes.Black
-            //};
-
-            //dc.DrawLine(pen, new Point(100.0, 100.0), new Point(100.0, -50.0));
-
-
             foreach (var dp in ItemsSource)
             {
                 int brushIndex = (int)dp.Type;

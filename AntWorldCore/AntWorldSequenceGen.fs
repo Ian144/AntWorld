@@ -74,10 +74,8 @@ let MakeAntWorldSeq (numAntsPerNest:int)  (numNests:int) (numFoodItems:int) (num
 
     // make the '1st frame' antWorld, subsequent frames are created from the previous one
     // considering local immutability to be safe
-    let mutable initialAntWorld = {  nests = nests; 
-                                     foodItems = foodItems;
-                                     trails = Map.empty<Location,float>;
-                                     obstacles = obstacles }
+    let mutable initialAntWorld = {  nests = nests; foodItems = foodItems; trails = Map.empty<Location,float>; obstacles = obstacles }
+    
     seq{
         while true do
             yield initialAntWorld
