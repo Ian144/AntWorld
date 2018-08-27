@@ -1,9 +1,7 @@
 ﻿module AntMovement
 
 open Types
-open FSharpx.State
 open Checked
-open Utilities
 open PheromoneTrails
 open CollisionFuncs
 

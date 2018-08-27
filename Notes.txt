@@ -3,7 +3,7 @@
 
 
 
-
+Seq lazyness is usefull during generation
 
 remove need for fsharpx
 	don't use monadic state updater

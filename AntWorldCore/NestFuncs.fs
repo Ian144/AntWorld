@@ -44,11 +44,11 @@ let UpdateAntDetectedFood (ant:Ant) (foodItem:FoodItem) (antWorld:AntWorld) (ste
 
 
 
-let numGetUnstuckAttempts = 64
+let numGetUnstuckAttempts = 64 // todo: make the number of 'try to get unstuck' steps configurable
 
 let UpdateAntReturnToNestHungary (ant:Ant) (antWorld:AntWorld) (stepSize:float<distance>) : (Ant*AntWorld) = 
     if IsStuck ant then
-        let ant2 = {ant with state = GettingUnStuck(ant.state, numGetUnstuckAttempts, LocationFuncs.zeroDirection) } // todo: make the number of 'try to get unstuck' steps configurable
+        let ant2 = {ant with state = GettingUnStuck(ant.state, numGetUnstuckAttempts, LocationFuncs.zeroDirection) } 
         (ant2, antWorld)
     else
         let loc2 = MoveTowardsWithCollisionDetection ant.nestLoc ant.loc stepSize antWorld.obstacles
