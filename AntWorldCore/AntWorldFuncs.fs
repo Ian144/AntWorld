@@ -3,29 +3,15 @@
 
 open Types
 open NestFuncs
-open FSharpx.State
 open PheromoneTrails
 
 
 
 
-let rec MonadicNestsUpdater (nests: Nest list) = 
-    state{  if nests.IsEmpty then
-                return []
-            else
-                let! antWorld = getState
-                let nest', antWorld2 = UpdateNest2 nests.Head antWorld
-                do! putState antWorld2
-                let! nests' = MonadicNestsUpdater nests.Tail 
-                return nest' :: nests' }
-
-
-let NestUpdater (nest:Nest, aw:AntWorld) : (Nest*AntWorld) =
-     UpdateNest2 nest aw
 
 
 let NestsUpdater (nests:Nest list) (awIn:AntWorld) : (Nest list*AntWorld) =
-    let mutable aw = awIn // is this uglier than the state monad
+    let mutable aw = awIn
     let nests2 = 
         [   for nest in nests do
             let nest', awTmp = UpdateNest2 nest aw
@@ -33,8 +19,6 @@ let NestsUpdater (nests:Nest list) (awIn:AntWorld) : (Nest list*AntWorld) =
             yield nest'
         ]
     (nests2, aw)
-
-
 
 
 let UpdateWorld (aw:AntWorld) : AntWorld =

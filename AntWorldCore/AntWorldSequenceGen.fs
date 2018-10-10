@@ -78,8 +78,8 @@ let MakeAntWorldSeq (numAntsPerNest:int)  (numNests:int) (numFoodItems:int) (num
     
     seq{
         while true do
-            yield initialAntWorld
-            initialAntWorld <- UpdateWorld initialAntWorld
+        yield initialAntWorld
+        initialAntWorld <- UpdateWorld initialAntWorld
     }
 
 

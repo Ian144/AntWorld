@@ -55,8 +55,6 @@ namespace AntWorldGui
         }
     }
 
-
-
     public static class MaybeLinqProvider
     {
         public static Maybe<T> ToMaybe<T>(this T value)
