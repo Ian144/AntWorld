@@ -147,44 +147,37 @@ let FuncX (ant:Ant) (nest:Nest) (antWorld:AntWorld) =
                                                           (ant2, nest, antWorld2)
 
 
-let rec MonadicUpdateAnts (ants : Ant list) (nest : Nest) (antWorld:AntWorld) = 
-    //let mutable ants = ants
-    //let mutable nest = nest
-    //let mutable antWorld = antWorld
-    if ants.IsEmpty then  
-        ants, nest, antWorld
-    else
 
-        // how to replicate state monad updating with a while loop 
-        // - DOES THIS REQUIRE YIELD-RETURN, WHICH BASICALLY MAKES IT A FOLD, OR MAP
-        // - or does it require adding to an mutable updateable list
-        // how to replicate state monad update with a fold - this feels more natural
-        //  THE STATE MUST include the nest and the world, but maybe the fold can be over the ant list only
-        //   
-        // ZIP ZIP ZIP??
+let Funcx (ant:Ant) (nest:Nest) (antWorld:AntWorld) = 
+    match ant.state with 
+    | InNest                                        ->  let antTmp, nestTmp = FeedResidentAnt ant nest
+                                                        (antTmp, nestTmp, antWorld)
+    | SearchingForFood dir                          ->  let antTmp = UpdateAntSearchingForFood ant dir antWorld antStepSize
+                                                        (antTmp, nest, antWorld)
+    | DetectedFood foodItem                         ->  let antTmp, antWorldTmp = UpdateAntDetectedFood ant foodItem antWorld antStepSize 
+                                                        (antTmp, nest, antWorldTmp)
+    | FollowingTrail dir                            ->  let antTmp = UpdateAntFollowingTrail ant antWorld antStepSize 
+                                                        (antTmp, nest, antWorld)
+    | ReturnToNestHungary                           ->  let antTmp, antWorldTmp = UpdateAntReturnToNestHungary ant antWorld antStepSize
+                                                        (antTmp, nest, antWorldTmp)
+    | ReturnToNestWithFood foodCarried              ->  let antTmp, nestTmp, antWorldTmp = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+                                                        (antTmp, nestTmp, antWorldTmp)
+    | GettingUnStuck (oldState, unStuckCount, dir)  ->  let antTmp, antWorldTmp = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+                                                        (antTmp, nest, antWorldTmp)
 
-        //let xs = List.fold
 
-
-        //let ant = ants.Head
-        //let (ant2, nest2, antWorld2) =  match ant.state with 
-        //                                | InNest -> let ant2, nest2 = FeedResidentAnt ant nest
-        //                                            (ant2, nest2, antWorld)
-        //                                | SearchingForFood dir -> let ant2 = UpdateAntSearchingForFood ant dir antWorld antStepSize 
-        //                                                          (ant2, nest, antWorld)
-        //                                | DetectedFood foodItem -> let ant2, antWorld2 = UpdateAntDetectedFood ant foodItem antWorld antStepSize 
-        //                                                           (ant2, nest, antWorld2)
-        //                                | FollowingTrail dir -> let ant2 = UpdateAntFollowingTrail ant antWorld antStepSize 
-        //                                                        (ant2, nest, antWorld)
-        //                                | ReturnToNestHungary -> let ant2, antWorld2 = UpdateAntReturnToNestHungary ant antWorld antStepSize
-        //                                                         (ant2, nest, antWorld2)
-        //                                | ReturnToNestWithFood foodCarried -> let ant2, nest2, antWorld2 = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
-        //                                                                      (ant2, nest2, antWorld2)
-        //                                | GettingUnStuck (oldState, unStuckCount, dir) -> let ant2, antWorld2 = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
-        //                                                                                  (ant2, nest, antWorld2)
-                                                                                                        
-        (ants, nest, antWorld)
-
+// a pure function on the outside, imperative on the inside
+let rec UpdateAllAnts (ants:Ant list) (nest:Nest) (antWorld:AntWorld) funcx = 
+    let mutable nest2 = nest
+    let mutable antWorld2 = antWorld
+    let antArray = ants |> Array.ofList // array elements are mutable
+    for ctr = 0 to (antArray.Length - 1) do
+        let ant = antArray.[ctr]
+        let (antTmp, nestTmp, antWorldTmp) = funcx ant nest2 antWorld2
+        antArray.[ctr] <- antTmp
+        nest2 <- nestTmp
+        antWorld2 <- antWorldTmp
+    (antArray |> Array.toList, nest2, antWorld2)
 
 
 let AntsUseUpFood (ants:Ant List) : Ant List = 
@@ -197,12 +190,11 @@ let AntsUseUpFood (ants:Ant List) : Ant List =
             yield ant''
         else
             yield ant']
-    
        
 
 let UpdateNest2 (nest:Nest) (antWorld:AntWorld) : (Nest*AntWorld) = 
     let ants = AntsUseUpFood nest.Ants // all ants burn up 1 food unit per iteration
-    let ants2, nest2, antWorld2 = MonadicUpdateAnts ants nest antWorld
+    let ants2, nest2, antWorld2 = UpdateAllAnts ants nest antWorld Funcx
     let nest3 = { Ants = ants2;  // todo nest 3 here, was old antworld correctly updating  the food store
                   FoodStore = nest2.FoodStore; 
                   Loc = nest.Loc } 
