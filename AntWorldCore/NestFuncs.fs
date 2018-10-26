@@ -167,17 +167,17 @@ let Funcx (ant:Ant) (nest:Nest) (antWorld:AntWorld) =
 
 
 // a pure function on the outside, imperative on the inside
-let rec UpdateAllAnts (ants:Ant list) (nest:Nest) (antWorld:AntWorld) funcx = 
+let rec UpdateAllAnts (ants:Ant list) (nest:Nest) (world:AntWorld) funcx = 
     let mutable nest2 = nest
-    let mutable antWorld2 = antWorld
+    let mutable world2 = world
     let antArray = ants |> Array.ofList // array elements are mutable
     for ctr = 0 to (antArray.Length - 1) do
         let ant = antArray.[ctr]
-        let (antTmp, nestTmp, antWorldTmp) = funcx ant nest2 antWorld2
+        let (antTmp, nestTmp, worldTmp) = funcx ant nest2 world2
         antArray.[ctr] <- antTmp
         nest2 <- nestTmp
-        antWorld2 <- antWorldTmp
-    (antArray |> Array.toList, nest2, antWorld2)
+        world2 <- worldTmp
+    (antArray |> Array.toList, nest2, world2)
 
 
 let AntsUseUpFood (ants:Ant List) : Ant List = 
@@ -192,13 +192,13 @@ let AntsUseUpFood (ants:Ant List) : Ant List =
             yield ant']
        
 
-let UpdateNest2 (nest:Nest) (antWorld:AntWorld) : (Nest*AntWorld) = 
+let UpdateNest2 (nest:Nest) (world:AntWorld) : (Nest*AntWorld) = 
     let ants = AntsUseUpFood nest.Ants // all ants burn up 1 food unit per iteration
-    let ants2, nest2, antWorld2 = UpdateAllAnts ants nest antWorld Funcx
-    let nest3 = { Ants = ants2;  // todo nest 3 here, was old antworld correctly updating  the food store
+    let ants2, nest2, world2 = UpdateAllAnts ants nest world Funcx
+    let nest3 = { Ants = ants2;  // todo nest3 here, was old antworld correctly updating the food store
                   FoodStore = nest2.FoodStore; 
                   Loc = nest.Loc } 
-    ( nest3, antWorld2)
+    ( nest3, world2)
 
 
 
