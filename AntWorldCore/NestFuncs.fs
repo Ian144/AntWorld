@@ -166,7 +166,7 @@ let Funcx (ant:Ant) (nest:Nest) (antWorld:AntWorld) =
                                                         (antTmp, nest, antWorldTmp)
 
 
-// a pure function on the outside, imperative on the inside
+// a pure function on the outside, imperative on the inside, an alternative to the state monad
 let rec UpdateAllAnts (ants:Ant list) (nest:Nest) (world:AntWorld) funcx = 
     let mutable nest2 = nest
     let mutable world2 = world
