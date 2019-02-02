@@ -40,14 +40,8 @@ namespace AntWorldGui
 
         public IEnumerable<VisibleEntity> ItemsSource
         {
-            set
-            {
-                SetValue(ItemsSourceProperty, value);
-            }
-            get
-            {
-                return (IEnumerable<VisibleEntity>)GetValue(ItemsSourceProperty);
-            }
+            set => SetValue(ItemsSourceProperty, value);
+            get => (IEnumerable<VisibleEntity>)GetValue(ItemsSourceProperty);
         }
 
 

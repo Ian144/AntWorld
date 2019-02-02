@@ -76,6 +76,7 @@ namespace AntWorldGui
                     txtOutputAnts.Text = "invalid config";
                     return;
                 }
+                
 
                 var config = maybeConfig.Value();
 
@@ -95,10 +96,8 @@ namespace AntWorldGui
 
 
                 //todo: ensure all drawing is in the gui thread, which is undoubtadly not this thread
-                var ts = new ThreadStart(() =>
-                {
-                    while (_running)
-                    {
+                var ts = new ThreadStart(() => {
+                    while (_running) {
                         var aw = GetNextAntWorld();
                         DrawAntWorld(aw);
                         //Thread.Sleep(20);

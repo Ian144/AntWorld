@@ -60,4 +60,4 @@ let UpdateFoodItemList (foodList:FoodItem list) (updatedFoodItem:FoodItem) =
                                             else
                                                 item
     // slot the updated fooditem into the list and remove any fooditems of zero size
-    foodList |> List.map SelectIfUpdate |> List.filter (fun fdItem -> fdItem.amountFood > 0<food>)
+    foodList |> List.map SelectIfUpdate |> List.filter (fun fdItem -> fdItem.amountFood >= 0<food>)
