@@ -1,5 +1,6 @@
 ﻿module Types
 
+open System
 
 [<Measure>]
 type distance
@@ -13,10 +14,16 @@ type health
 [<Measure>]
 type time
 
+type IMyInterface =
+    abstract GetValue: unit -> string
 
+// x and y co-ordinates of a location
+[<StructuralComparison>]
+[<StructuralEquality>]
+type Location = 
+    {   x:float<distance> 
+        y:float<distance> }
 
-// i.e co-ordinates
-type Location = { x:float<distance>; y:float<distance> }
 
 // multiple types can be 'bumped into', IRadLoc enables the different 'bumpable' types to be treated in the same way
 // todo - think of a better name for this

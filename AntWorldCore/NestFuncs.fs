@@ -129,22 +129,22 @@ let UpdateAntSearchingForFood (ant:Ant) (direction:MoveVec) (antWorld:AntWorld) 
 
 
 
-let FuncX (ant:Ant) (nest:Nest) (antWorld:AntWorld) = 
-        match ant.state with 
-        | InNest -> let ant2, nest2 = FeedResidentAnt ant nest
-                    (ant2, nest2, antWorld)
-        | SearchingForFood dir -> let ant2 = UpdateAntSearchingForFood ant dir antWorld antStepSize 
-                                  (ant2, nest, antWorld)
-        | DetectedFood foodItem -> let ant2, antWorld2 = UpdateAntDetectedFood ant foodItem antWorld antStepSize 
-                                   (ant2, nest, antWorld2)
-        | FollowingTrail dir -> let ant2 = UpdateAntFollowingTrail ant antWorld antStepSize 
-                                (ant2, nest, antWorld)
-        | ReturnToNestHungary -> let ant2, antWorld2 = UpdateAntReturnToNestHungary ant antWorld antStepSize
-                                 (ant2, nest, antWorld2)
-        | ReturnToNestWithFood foodCarried -> let ant2, nest2, antWorld2 = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
-                                              (ant2, nest2, antWorld2)
-        | GettingUnStuck (oldState, unStuckCount, dir) -> let ant2, antWorld2 = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
-                                                          (ant2, nest, antWorld2)
+//let FuncX (ant:Ant) (nest:Nest) (antWorld:AntWorld) = 
+//        match ant.state with 
+//        | InNest -> let ant2, nest2 = FeedResidentAnt ant nest
+//                    (ant2, nest2, antWorld)
+//        | SearchingForFood dir -> let ant2 = UpdateAntSearchingForFood ant dir antWorld antStepSize 
+//                                  (ant2, nest, antWorld)
+//        | DetectedFood foodItem -> let ant2, antWorld2 = UpdateAntDetectedFood ant foodItem antWorld antStepSize 
+//                                   (ant2, nest, antWorld2)
+//        | FollowingTrail dir -> let ant2 = UpdateAntFollowingTrail ant antWorld antStepSize 
+//                                (ant2, nest, antWorld)
+//        | ReturnToNestHungary -> let ant2, antWorld2 = UpdateAntReturnToNestHungary ant antWorld antStepSize
+//                                 (ant2, nest, antWorld2)
+//        | ReturnToNestWithFood foodCarried -> let ant2, nest2, antWorld2 = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+//                                              (ant2, nest2, antWorld2)
+//        | GettingUnStuck (oldState, unStuckCount, dir) -> let ant2, antWorld2 = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+//                                                          (ant2, nest, antWorld2)
 
 
 

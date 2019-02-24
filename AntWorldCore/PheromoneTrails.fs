@@ -63,12 +63,25 @@ let GetPheromoneLevel loc (trail:Trail) =
 
 
 
-// pheremone trails fade with time if not renewed
-let FadeTrails (trails:Trail) : Trail  = 
-    let xs = trails |> Map.toList
+ //pheremone trails fade with time if not renewed
+let FadeTrailsOld (trails:Trail) : Trail  = 
+    let xs = trails |> Map.toArray
     let ys =
-        [   for loc,pheremoneLevel in xs do  
+        [|  for loc,pheremoneLevel in xs do  
             let pheremoneLevel2 = pheremoneLevel * 0.998
             if pheremoneLevel2 > 0.1 then
-                yield loc, pheremoneLevel2            ]
-    ys |> Map.ofList
+                yield loc, pheremoneLevel2            |]
+    ys |> Map.ofArray
+
+
+
+let updatePheremoneLevel (level:float) : float = level * 0.999
+
+let FadeTrails (trails:Trail) : Trail = 
+    let mapOut =
+        trails
+        |> Map.map(fun _ v -> (updatePheremoneLevel v))
+        |> Map.filter(fun _ v -> v > 0.1 )
+    mapOut
+
+
