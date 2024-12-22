@@ -159,7 +159,7 @@ namespace AntWorldGui
 
                     foreach (var ff in aw.trails)
                     {
-                        if (this.RandDraw())
+                        //if (this.RandDraw())
                         {
                             var convLoc = ConvertCoords(ff.Key.x, ff.Key.y, h, w, magnification);
                             var dp = new VisibleEntity

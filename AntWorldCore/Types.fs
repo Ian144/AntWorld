@@ -1,7 +1,5 @@
 ﻿module Types
 
-open System
-
 [<Measure>]
 type distance
 
@@ -14,12 +12,11 @@ type health
 [<Measure>]
 type time
 
-type IMyInterface =
-    abstract GetValue: unit -> string
 
 // x and y co-ordinates of a location
 [<StructuralComparison>]
 [<StructuralEquality>]
+[<Struct>]
 type Location = 
     {   x:float<distance> 
         y:float<distance> }
@@ -34,14 +31,19 @@ type IRadLoc =
 
 
 // food item radius - amount food is proportional to area, which is a circle
-// area  = pi.r^2 therefore r = sqrt(amountFood */PI)
+// area  = pi.r^2 therefore r = sqrt(amountFood */PI)a
+[<StructuralComparison>]
+[<StructuralEquality>]
+[<Struct>]
 type FoodItem = {loc : Location;  amountFood : int<food>}
                 interface IRadLoc with 
                     member this.GetLoc = this.loc
                     member this.GetRadius = let tmp = (float this.amountFood) 
                                             LanguagePrimitives.FloatWithMeasure<distance> (sqrt (tmp / System.Math.PI))
 
-
+[<StructuralComparison>]
+[<StructuralEquality>]
+[<Struct>]
 type Obstacle = { radius:float<distance>; loc:Location }
                 interface IRadLoc with 
                     member this.GetLoc = this.loc
@@ -51,12 +53,14 @@ type Obstacle = { radius:float<distance>; loc:Location }
 
 
 // represents a change in location
+[<StructuralComparison>]
+[<StructuralEquality>]
+[<Struct>]
 type MoveVec = { dx:float<distance>; dy:float<distance> }
 
 
 // used in two modules
 let antStepSize = 1.0<distance>
-
 
 
 type AntState = 

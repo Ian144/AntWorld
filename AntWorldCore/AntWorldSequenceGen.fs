@@ -77,9 +77,11 @@ let MakeAntWorldSeq (numAntsPerNest:int)  (numNests:int) (numFoodItems:int) (num
     let mutable initialAntWorld = {  nests = nests; foodItems = foodItems; trails = Map.empty<Location,float>; obstacles = obstacles }
     
     seq{
+        let mutable ctr = 0
         while true do
         yield initialAntWorld
-        initialAntWorld <- UpdateWorld initialAntWorld
+        initialAntWorld <- UpdateWorld ctr initialAntWorld
+        ctr <- ctr + 1
     }
 
 

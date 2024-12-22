@@ -64,20 +64,22 @@ let GetPheromoneLevel loc (trail:Trail) =
 
 
  //pheremone trails fade with time if not renewed
-let FadeTrailsOld (trails:Trail) : Trail  = 
+let FadeTrails (trails:Trail) : Trail  = 
+
     let xs = trails |> Map.toArray
     let ys =
         [|  for loc,pheremoneLevel in xs do  
-            let pheremoneLevel2 = pheremoneLevel * 0.998
+            let pheremoneLevel2 = pheremoneLevel * 0.5
             if pheremoneLevel2 > 0.1 then
-                yield loc, pheremoneLevel2            |]
+                yield loc, pheremoneLevel2            |] // this boxy thing is the array-expression delimiter
     ys |> Map.ofArray
 
 
 
-let updatePheremoneLevel (level:float) : float = level * 0.999
+let updatePheremoneLevel (level:float) : float = level * 0.99
 
-let FadeTrails (trails:Trail) : Trail = 
+let FadeTrailsX (trails:Trail) : Trail = 
+
     let mapOut =
         trails
         |> Map.map(fun _ v -> (updatePheremoneLevel v))

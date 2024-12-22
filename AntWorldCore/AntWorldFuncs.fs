@@ -21,9 +21,9 @@ let NestsUpdater (nests:Nest list) (awIn:AntWorld) : (Nest list*AntWorld) =
     (nests2, aw)
 
 
-let UpdateWorld (aw:AntWorld) : AntWorld =
+let UpdateWorld (updateCount:int) (aw:AntWorld) : AntWorld =
     let nests = aw.nests
-    let trails2 = FadeTrails aw.trails
+    let trails2 = if updateCount % 2048 = 0 then FadeTrails aw.trails else aw.trails // fadeTrades is the most expensive function according to me+perfview
     let aw2 = {aw with trails = trails2} 
     //let nests2, aw3 = MonadicNestsUpdater nests aw2
     let nests2, aw3 = NestsUpdater nests aw2

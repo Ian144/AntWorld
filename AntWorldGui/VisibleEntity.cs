@@ -11,7 +11,7 @@ namespace AntWorldGui
             DataPoints = new List<VisibleEntity>();
         }
 
-        public List<VisibleEntity> DataPoints { set; get; }
+        public List<VisibleEntity> DataPoints { private set; get; }
     }
 
 
