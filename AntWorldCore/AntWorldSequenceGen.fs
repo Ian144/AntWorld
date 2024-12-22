@@ -11,8 +11,6 @@ let originLoc = { x = 0.0<distance>; y = 0.0<distance> }
 let randGen = System.Random()
 
 
-
-
 let private NoOcclusion (aa:IRadLoc) (bb:IRadLoc) =
     let distBetween = LocationFuncs.CalcDistance aa.GetLoc bb.GetLoc
     let sumRadius = aa.GetRadius + bb.GetRadius

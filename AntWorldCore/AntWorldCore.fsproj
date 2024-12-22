@@ -1,24 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="Types.fs" />
     <Compile Include="Utilities.fs" />
-    <Compile Include="LocationFuncs.fs" />
-    <Compile Include="CollisionFuncs.fs" />
+    <Compile Include="Location.fs" />
+    <Compile Include="Collision.fs" />
     <Compile Include="PheromoneTrails.fs" />
-    <Compile Include="AntMovementFuncs.fs" />
-    <Compile Include="FoodFuncs.fs" />
-    <Compile Include="NestFuncs.fs" />
-    <Compile Include="AntWorldFuncs.fs" />
+    <Compile Include="AntMovement.fs" />
+    <Compile Include="Food.fs" />
+    <Compile Include="Nest.fs" />
+    <Compile Include="AntWorld.fs" />
     <Compile Include="AntWorldSequenceGen.fs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.6.2" />
   </ItemGroup>
 
 </Project>
