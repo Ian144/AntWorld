@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Notes.txt = Notes.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntWorldMvc", "AntWorldMvc\AntWorldMvc.csproj", "{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,14 +37,6 @@ Global
 		{8B8AE805-FCCD-4A3D-B90C-98C795C352BE}.Release|Any CPU.Build.0 = Release|x86
 		{8B8AE805-FCCD-4A3D-B90C-98C795C352BE}.Release|x86.ActiveCfg = Release|x86
 		{8B8AE805-FCCD-4A3D-B90C-98C795C352BE}.Release|x86.Build.0 = Release|x86
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Debug|x86.Build.0 = Debug|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Release|x86.ActiveCfg = Release|Any CPU
-		{9FB4F6D0-D335-4E6B-830B-D89C3D82D544}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

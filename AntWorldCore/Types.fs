@@ -41,14 +41,10 @@ type FoodItem = {loc : Location;  amountFood : int<food>}
                     member this.GetRadius = let tmp = (float this.amountFood) 
                                             LanguagePrimitives.FloatWithMeasure<distance> (sqrt (tmp / System.Math.PI))
 
-
 type Obstacle = { radius:float<distance>; loc:Location }
                 interface IRadLoc with 
                     member this.GetLoc = this.loc
                     member this.GetRadius = this.radius
-
-
-
 
 // represents a change in location
 type MoveVec = { dx:float<distance>; dy:float<distance> }

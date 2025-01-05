@@ -9,7 +9,6 @@ let CollisionTest (loc:Location) (obs:Obstacle) =
     let dist = LocationFuncs.CalcDistance loc obs.loc
     dist <= obs.radius
 
-
 let AnyCollisions (obs:Obstacle list) (loc:Location) = List.exists (CollisionTest loc) obs
 
 
