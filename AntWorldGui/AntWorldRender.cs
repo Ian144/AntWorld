@@ -14,26 +14,26 @@ namespace AntWorldGui
 
         public Brush Background
         {
-            set { SetValue(BackgroundProperty, value); }
-            get { return (Brush)GetValue(BackgroundProperty); }
+            set => SetValue(BackgroundProperty, value);
+            get => (Brush)GetValue(BackgroundProperty);
         }
 
 
         public static readonly DependencyProperty BrushesProperty = DependencyProperty.Register(
-                                                                        "Brushes",
+                                                                        nameof(Brushes),
                                                                         typeof(Brush[]),
                                                                         typeof(AntWorldRender),
                                                                         new FrameworkPropertyMetadata( null, FrameworkPropertyMetadataOptions.AffectsRender) );
 
         public Brush[] Brushes
         {
-            set { SetValue(BrushesProperty, value); }
-            get { return (Brush[])GetValue(BrushesProperty); }
+            set => SetValue(BrushesProperty, value);
+            get => (Brush[])GetValue(BrushesProperty);
         }
 
 
         public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
-                                                                                "ItemsSource",
+                                                                                nameof(ItemsSource),
                                                                                 typeof(IEnumerable<VisibleEntity>),
                                                                                 typeof(AntWorldRender));
 
