@@ -35,7 +35,9 @@ let OneInTen () = randGen.NextDouble() < 0.1
 
 
 let GetRandomMoveVec () =
-    let GetRandDist () =  (randGen.NextDouble() * 2.0 * antStepSize - antStepSize)
+    let GetRandDist () =
+        (randGen.NextDouble() * 2.0 * antStepSize - antStepSize)
+
     { dx = GetRandDist()
       dy = GetRandDist() }
 

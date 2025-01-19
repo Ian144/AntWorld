@@ -58,20 +58,30 @@ let numGetUnstuckAttempts = 64 // todo: make the number of 'try to get unstuck' 
 
 let UpdateAntReturnToNestHungary (ant: Ant) (antWorld: AntWorld) (stepSize: float<distance>) : (Ant * AntWorld) =
     if IsStuck ant then
-        let ant2 = { ant with state = GettingUnStuck(ant.state, numGetUnstuckAttempts, LocationFuncs.zeroDirection) }
+        let ant2 =
+            { ant with
+                state = GettingUnStuck(ant.state, numGetUnstuckAttempts, LocationFuncs.zeroDirection) }
+
         (ant2, antWorld)
     else
-        let loc2 = MoveTowardsWithCollisionDetection ant.nestLoc ant.loc stepSize antWorld.obstacles
+        let loc2 =
+            MoveTowardsWithCollisionDetection ant.nestLoc ant.loc stepSize antWorld.obstacles
+
         let ant2 = UpdateLoc ant loc2
+
         if loc2 = ant.nestLoc then
             let ant3 = { ant2 with state = AntState.InNest }
             (ant3, antWorld)
         else
             let optFd = FoodFuncs.FoodDetected ant.loc antWorld.foodItems
+
             let ant3 =
                 match optFd with
-                | Some foodItem -> { ant2 with state = DetectedFood foodItem }
+                | Some foodItem ->
+                    { ant2 with
+                        state = DetectedFood foodItem }
                 | None -> ant2
+
             (ant3, antWorld)
 
 let UpdateAntReturnToNestWithFood
@@ -233,10 +243,14 @@ let Funcx (ant: Ant) (nest: Nest) (antWorld: AntWorld) =
         let antTmp, antWorldTmp = UpdateAntReturnToNestHungary ant antWorld antStepSize
         (antTmp, nest, antWorldTmp)
     | ReturnToNestWithFood foodCarried ->
-        let antTmp, nestTmp, antWorldTmp = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+        let antTmp, nestTmp, antWorldTmp =
+            UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+
         (antTmp, nestTmp, antWorldTmp)
     | GettingUnStuck(oldState, unStuckCount, dir) ->
-        let antTmp, antWorldTmp = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+        let antTmp, antWorldTmp =
+            UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+
         (antTmp, nest, antWorldTmp)
 
 
