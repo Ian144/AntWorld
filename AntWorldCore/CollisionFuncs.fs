@@ -5,13 +5,11 @@ open Types
 
 
 // return true if the location is covered by an obstacle
-let CollisionTest (loc:Location) (obs:Obstacle) = 
+let CollisionTest (loc: Location) (obs: Obstacle) =
     let dist = LocationFuncs.CalcDistance loc obs.loc
     dist <= obs.radius
 
-let AnyCollisions (obs:Obstacle list) (loc:Location) = List.exists (CollisionTest loc) obs
+let AnyCollisions (obstacles: Obstacle list) (locations: Location) =
+    List.exists (CollisionTest locations) obstacles
 
-
-let CollisionFilter (obs:Obstacle list) (loc:Location) = not (AnyCollisions obs loc)
-
-
+let CollisionFilter (obstacles: Obstacle list) (locations: Location) = not (AnyCollisions obstacles locations)

@@ -1,25 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="Types.fs" />
-    <Compile Include="Utilities.fs" />
-    <Compile Include="LocationFuncs.fs" />
-    <Compile Include="CollisionFuncs.fs" />
-    <Compile Include="PheromoneTrails.fs" />
-    <Compile Include="AntMovementFuncs.fs" />
-    <Compile Include="FoodFuncs.fs" />
-    <Compile Include="NestFuncs.fs" />
-    <Compile Include="AntWorldFuncs.fs" />
-    <Compile Include="AntWorldSequenceGen.fs" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Types.fs"/>
+        <Compile Include="Utilities.fs"/>
+        <Compile Include="LocationFuncs.fs"/>
+        <Compile Include="CollisionFuncs.fs"/>
+        <Compile Include="PheromoneTrails.fs"/>
+        <Compile Include="AntMovementFuncs.fs"/>
+        <Compile Include="FoodFuncs.fs"/>
+        <Compile Include="NestFuncs.fs"/>
+        <Compile Include="AntWorldFuncs.fs"/>
+        <Compile Include="AntWorldSequenceGen.fs"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="FSharp.Core" Version="4.6.2" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Update="FSharp.Core" Version="4.6.2"/>
+    </ItemGroup>
 
 </Project>

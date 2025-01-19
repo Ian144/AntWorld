@@ -3,11 +3,10 @@
 
 
 
-Seq lazyness is usefull during generation
+Seq lazyness is useful during generation
 
 remove need for fsharpx
 	don't use monadic state updater
-
 
 ensure drawing is in the gui thread
 
@@ -17,7 +16,7 @@ in this style
 		concurrent for producer consumer
 		mutable only use within a function
 		using mutable types, that don't escape a function, is a safe as using immutable types
-​
+
 core 100% immutable
 allow going backwards in time
 
