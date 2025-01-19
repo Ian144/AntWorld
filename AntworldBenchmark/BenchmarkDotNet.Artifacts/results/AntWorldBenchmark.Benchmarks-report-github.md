@@ -10,6 +10,7 @@ Job=.NET 8.0  Runtime=.NET 8.0  InvocationCount=1
 UnrollFactor=1  
 
 ```
-|         Method |     Mean |    Error |   StdDev |        Gen0 |       Gen1 |      Gen2 | Allocated |
-|--------------- |---------:|---------:|---------:|------------:|-----------:|----------:|----------:|
+
+| Method         |     Mean |    Error |   StdDev |        Gen0 |       Gen1 |      Gen2 | Allocated |
+|----------------|---------:|---------:|---------:|------------:|-----------:|----------:|----------:|
 | OneKIterations | 775.2 ms | 49.54 ms | 146.1 ms | 159000.0000 | 18000.0000 | 1000.0000 | 947.82 MB |
