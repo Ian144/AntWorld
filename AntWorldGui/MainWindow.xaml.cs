@@ -6,9 +6,20 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
-using JetBrains.Profiler.Api;
-
 namespace AntWorldGui;
+
+class AntStateCounts
+{
+    public int ReturnToNestHungaryCount { get; set; }
+    public int ReturnToNestWithFoodCount { get; set; }
+    public int SearchingForFoodCount { get; set; }
+    public int FollowingTrailCount { get; set; }
+    public int InNestCount { get; set; }
+    public int DetectedFoodCount { get; set; }
+    public int GettingUnstuckCount { get; set; }
+}
+
+
 
 /// <summary>
 ///     Interaction logic for MainWindow.xaml
@@ -101,12 +112,10 @@ public partial class MainWindow : Window
             });
 
             _drawThread = new Thread(ts);
-            MeasureProfiler.StartCollectingData();
             _drawThread.Start();
         }
         else
         {
-           MeasureProfiler.StopCollectingData();
             _running = false;
             btnStartStop.Content = "Start";
         }
@@ -120,13 +129,16 @@ public partial class MainWindow : Window
 
     private bool RandDraw()
     {
-        return _rnd.NextDouble() < 0.05;
+        return _rnd.NextDouble() < 0.01;
     }
 
     private void DrawAntWorld(Types.AntWorld aw)
     {
-        var aa = () =>
+                
+        myAntWorldDisplayControl.Dispatcher.Invoke(() =>
         {
+            myAntWorldDisplayControl.Redraw();
+            
             var magnification = zoomer.Value;
             var h = myAntWorldDisplayControl.ActualHeight;
             var w = myAntWorldDisplayControl.ActualWidth;
@@ -134,7 +146,7 @@ public partial class MainWindow : Window
             _dcol.DataPoints.Clear();
             foreach (var obstacle in aw.obstacles)
             {
-                var rl = obstacle as Types.IRadLoc;
+                Types.IRadLoc rl = obstacle;
 
                 var convLoc = ConvertCoords(obstacle.loc, h, w, magnification);
                 var dp = new VisibleEntity
@@ -167,7 +179,7 @@ public partial class MainWindow : Window
                         Radius = TrailPointRadius * magnification,
                         Type = EntityType.TrailPoint
                     };
-
+            
                     _dcol.DataPoints.Add(dp);
                 }
 
@@ -199,37 +211,41 @@ public partial class MainWindow : Window
             //sb.AppendLine("---------------------");
             //_logger.Write(sb.ToString());
 
-            var allAnts = from nest in aw.nests
-                from ant in nest.Ants
-                select ant;
-
-            var enumerable = allAnts as Types.Ant[] ?? allAnts.ToArray();
-            var returnToNestHungaryCount = enumerable.Count(_ => _.state.IsReturnToNestHungary);
-            var returnToNestWithFoodCount = enumerable.Count(_ => _.state.IsReturnToNestWithFood);
-            var searchingForFoodCount = enumerable.Count(_ => _.state.IsSearchingForFood);
-            var followingTrailCount = enumerable.Count(_ => _.state.IsFollowingTrail);
-            var inNestCount = enumerable.Count(a => a.state.IsInNest);
-            var detectedFoodCount = enumerable.Count(_ => _.state.IsDetectedFood);
-            var gettingUnstuckCount = enumerable.Count(_ => _.state.IsGettingUnStuck);
-
-            var msg =
-                string.Format(
-                    "ReturnToNestHungary: {0}\nReturnToNestWithFood: {1}\nSearchingForFood: {2}\nFollowingTrail: {3}\nInNest: {4}\nDetectedFood: {5}\nGettingUnstuck: {6}\n\nnum trail points: {7}",
-                    returnToNestHungaryCount,
-                    returnToNestWithFoodCount,
-                    searchingForFoodCount,
-                    followingTrailCount,
-                    inNestCount,
-                    detectedFoodCount,
-                    gettingUnstuckCount,
-                    aw.trails.Count);
-
-            txtOutputAnts.Text = msg;
-
-            myAntWorldDisplayControl.Redraw();
-        };
-
-        myAntWorldDisplayControl.Dispatcher.Invoke(aa);
+            // var allAnts = 
+            //     from nest in aw.nests
+            //     from ant in nest.Ants
+            //     select ant;
+            //
+            // var ants = allAnts as Types.Ant[] ?? allAnts.ToArray();
+            //
+            // var counts = new AntStateCounts();
+            //
+            // foreach (var ant in aw.nests.SelectMany(nest => nest.Ants))
+            // {
+            //     // Determine the ant's state and increment the corresponding counter
+            //     if (ant.state.IsReturnToNestHungary) counts.ReturnToNestHungaryCount++;
+            //     else if (ant.state.IsReturnToNestWithFood) counts.ReturnToNestWithFoodCount++;
+            //     else if (ant.state.IsSearchingForFood) counts.SearchingForFoodCount++;
+            //     else if (ant.state.IsFollowingTrail) counts.FollowingTrailCount++;
+            //     else if (ant.state.IsInNest) counts.InNestCount++;
+            //     else if (ant.state.IsDetectedFood) counts.DetectedFoodCount++;
+            //     else if (ant.state.IsGettingUnStuck) counts.GettingUnstuckCount++;
+            // }
+            //
+            // var msg =
+            //     string.Format(
+            //         "ReturnToNestHungary: {0}\nReturnToNestWithFood: {1}\nSearchingForFood: {2}\nFollowingTrail: {3}\nInNest: {4}\nDetectedFood: {5}\nGettingUnstuck: {6}\n\nnum trail points: {7}",
+            //         counts.ReturnToNestHungaryCount,
+            //         counts.ReturnToNestWithFoodCount,
+            //         counts.SearchingForFoodCount,
+            //         counts.FollowingTrailCount,
+            //         counts.InNestCount,
+            //         counts.DetectedFoodCount,
+            //         counts.GettingUnstuckCount,
+            //         aw.trails.Count);
+            //
+            // txtOutputAnts.Text = msg;
+        });
     }
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -253,3 +269,4 @@ public partial class MainWindow : Window
         return str.All(char.IsDigit);
     }
 }
+
