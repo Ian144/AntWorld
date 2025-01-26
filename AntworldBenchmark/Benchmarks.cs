@@ -12,7 +12,7 @@ public class Benchmarks
     [IterationSetup]
     public void IterSetup()
     {
-        _antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(256, 1, 32, 64, 256);
+        _antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(256, 4, 64, 64, 256);
     }
 
     [Benchmark]

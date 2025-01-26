@@ -19,18 +19,16 @@ let NestsUpdaterIan (nests: Nest list) (awIn: AntWorld) : (Nest list * AntWorld)
 
     (nests2, aw)
 
-// impl by riders AI
+// impl by jetbrains AI
 let NestsUpdater (nests: Nest list) (awIn: AntWorld) : (Nest list * AntWorld) =
     let arr = Array.ofList nests // Convert to array for more efficient in-place iteration
     let mutable aw = awIn
     let mutable i = 0
-
     while i < arr.Length do
         let nest', awTmp = UpdateNest2 arr[i] aw
         arr[i] <- nest' // Update array in-place
         aw <- awTmp // Update the mutable state
         i <- i + 1
-
     (Array.toList arr, aw) // Convert back to list for output
 
 let UpdateWorld (aw: AntWorld) : AntWorld =

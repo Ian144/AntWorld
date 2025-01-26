@@ -92,7 +92,6 @@ let UpdateTrail (trail: Trail) (obs: Obstacle list) (loc: Location) : Trail =
 let GetPheromoneLevel loc (trail: Trail) =
     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
     let found, level = trail.TryGetValue loc2
-
     match found with
     | false -> 0.0
     | true -> level
@@ -110,7 +109,7 @@ let DeliberatelySlowLoop () =
     result
 
 //pheromone trails fade with time if not renewed
-let FadeTrails (trails: Trail) : Trail =
+let FadeTrailsArray (trails: Trail) : Trail =
     //let _ = DeliberatelySlowLoop()
     //System.Threading.Thread.Sleep(100);
     let xs = trails |> Map.toArray
@@ -126,13 +125,13 @@ let FadeTrails (trails: Trail) : Trail =
 
 let FadeTrailsEmpty (trails: Trail) : Trail = trails
 
-let FadeTrailsMap (trails: Trail) : Trail =
+let FadeTrailsMapFilter (trails: Trail) : Trail =
     trails |> Map.map (fun _ v -> (v * 0.998)) |> Map.filter (fun _ v -> v > 0.1)
 
-let FadeTrailsFold (trails: Trail) : Trail =
+let FadeTrails (trails: Trail) : Trail =
     trails
     |> Map.fold
         (fun acc key value ->
-            let newValue = value * 0.998
+            let newValue = value * 0.995
             if newValue > 0.1 then Map.add key newValue acc else acc)
         Map.empty

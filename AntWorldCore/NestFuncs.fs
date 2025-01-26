@@ -123,7 +123,6 @@ let UpdateAntReturnToNestWithFood
 let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<distance>) : Ant =
     let loc2, direction = MoveFollowingTrail ant antWorld stepSize
     let optFd = FoodFuncs.FoodDetected ant.loc antWorld.foodItems
-
     match optFd with
     | Some foodItem ->
         { (UpdateLoc ant loc2) with
@@ -140,7 +139,7 @@ let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<dis
                 state = SearchingForFood direction } // in case the ant as walked off the end of a fading trail
 
 
-let momentumFactor = 8.0
+let momentumFactor = 16.0
 
 
 // random walk with momentum for N frames (unStickCount), then revert to previous state
@@ -177,9 +176,6 @@ let UpdateAntGettingUnStuck
     else
         { ant with state = oldState }, antWorld
 
-
-
-
 // Ant searching trajectories modeled using brownian motion with momentum
 // i.e. ants take the next step following a brownian motion weighted in the direction that they have been following.
 // ant might find food or a trail
@@ -204,8 +200,6 @@ let UpdateAntSearchingForFood (ant: Ant) (direction: MoveVec) (antWorld: AntWorl
             { (UpdateLoc ant loc2) with
                 state = SearchingForFood direction } // same state, different direction
 
-
-
 //let FuncX (ant:Ant) (nest:Nest) (antWorld:AntWorld) =
 //        match ant.state with
 //        | InNest -> let ant2, nest2 = FeedResidentAnt ant nest
@@ -222,8 +216,6 @@ let UpdateAntSearchingForFood (ant: Ant) (direction: MoveVec) (antWorld: AntWorl
 //                                              (ant2, nest2, antWorld2)
 //        | GettingUnStuck (oldState, unStuckCount, dir) -> let ant2, antWorld2 = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
 //                                                          (ant2, nest, antWorld2)
-
-
 
 let Funcx (ant: Ant) (nest: Nest) (antWorld: AntWorld) =
     match ant.state with
@@ -259,16 +251,13 @@ let rec UpdateAllAnts (ants: Ant list) (nest: Nest) (world: AntWorld) funcx =
     let mutable nest2 = nest
     let mutable world2 = world
     let antArray = ants |> Array.ofList // array elements are mutable
-
     for ctr = 0 to (antArray.Length - 1) do
         let ant = antArray.[ctr]
         let (antTmp, nestTmp, worldTmp) = funcx ant nest2 world2
         antArray.[ctr] <- antTmp
         nest2 <- nestTmp
         world2 <- worldTmp
-
     (antArray |> Array.toList, nest2, world2)
-
 
 let AntsUseUpFood (ants: Ant List) : Ant List =
     [ for ant in ants do
@@ -299,7 +288,7 @@ let UpdateNest2 (nest: Nest) (world: AntWorld) : (Nest * AntWorld) =
     let ants2, nest2, world2 = UpdateAllAnts ants nest world Funcx
 
     let nest3 =
-        { Ants = ants2 // todo nest3 here, was old antworld correctly updating the food store
+        { Ants = ants2
           FoodStore = nest2.FoodStore
           Loc = nest.Loc }
 
