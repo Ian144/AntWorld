@@ -94,7 +94,8 @@ public partial class MainWindow : Window
                 config.NumNests,
                 config.NumFoodItems,
                 config.NumObstacles,
-                config.WorldSize);
+                config.WorldSize,
+                0);
 
             _antWorldSeq = antWorldSeq.GetEnumerator();
 

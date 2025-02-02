@@ -9,15 +9,11 @@ open CollisionFuncs
 let isStuckLookback = 10
 let isStuckDetectionFactor = 0.2
 
-
 let UpdateLoc (ant: Ant) newLoc =
-
     let prevLocs2 = newLoc :: (List.truncate (isStuckLookback - 1) ant.prevLocs)
-
     { ant with
         prevLocs = prevLocs2
         loc = newLoc }
-
 
 let IsStuck (ant: Ant) =
     if ant.prevLocs.Length = isStuckLookback then
@@ -27,9 +23,7 @@ let IsStuck (ant: Ant) =
     else
         false
 
-
-let private randGen = System.Random()
-
+let private randGen = System.Random(999)
 
 let OneInTen () = randGen.NextDouble() < 0.1
 

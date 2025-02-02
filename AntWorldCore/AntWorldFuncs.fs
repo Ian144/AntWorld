@@ -1,16 +1,12 @@
 ﻿module AntWorldFuncs
 
-
 open Types
 open NestFuncs
-open PheromoneTrails
-
 
 
 // my version
 let NestsUpdaterIan (nests: Nest list) (awIn: AntWorld) : (Nest list * AntWorld) =
     let mutable aw = awIn
-
     let nests2 =
         [ for nest in nests do
               let nest', awTmp = UpdateNest2 nest aw
@@ -31,13 +27,16 @@ let NestsUpdater (nests: Nest list) (awIn: AntWorld) : (Nest list * AntWorld) =
         i <- i + 1
     (Array.toList arr, aw) // Convert back to list for output
 
-let UpdateWorld (aw: AntWorld) : AntWorld =
+// imperative on the outside? why? is there a point where trails have finished been updated but still need to be read?
+// Trails could be a mutable dictionary (i think it was mutable at one stage)
+// This program is single threaded currently
+let UpdateWorld (aw: AntWorld) (fadeTrails: Trail -> Trail) : AntWorld =
     let nests = aw.nests
-    let trails2 = FadeTrails aw.trails
+    // let trails2 = PheromoneTrails.FadeTrailsFold aw.trails
+    let trails2 = fadeTrails aw.trails
     let aw2 = { aw with trails = trails2 }
     //let nests2, aw3 = MonadicNestsUpdater nests aw2
-    let nests2, aw3 = NestsUpdater nests aw2
-
+    let nests2, aw3 = NestsUpdater nests aw2   
     { aw2 with
         nests = nests2
         foodItems = aw3.foodItems

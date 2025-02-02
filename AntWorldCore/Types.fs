@@ -1,5 +1,7 @@
 ﻿module Types
 
+open System.Collections.Frozen
+
 
 [<Measure>]
 type distance
@@ -22,7 +24,6 @@ type IMyInterface =
 type Location =
     { x: float<distance>
       y: float<distance> }
-
 
 // multiple types can be 'bumped into', IRadLoc enables the different 'bumpable' types to be treated in the same way
 // todo - think of a better name for this
@@ -101,6 +102,7 @@ type Nest =
         member this.GetLoc = this.Loc
         member this.GetRadius = 4.0<distance>
 
+// todo F# Map be replaced with 
 type Trail = Map<Location, float>
 
 type AntWorld =
