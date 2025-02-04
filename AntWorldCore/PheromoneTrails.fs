@@ -86,7 +86,7 @@ let GetPheromoneLevel loc (trail: Trail) =
 // A deliberately slow for-loop to practice CPU profiling
 let DeliberatelySlowLoop () =
     let mutable result = 0.0
-    for i in 1 .. (System.Int32.MaxValue / 100) do
+    for i in 1 .. 1000000 do
         let x = float i ** 0.5 // Expensive square root
         let y = sin x * cos x // Trigonometric operations
         result <- result + y // Accumulate the result
@@ -94,6 +94,7 @@ let DeliberatelySlowLoop () =
 
 //pheromone trails fade with time if not renewed
 let FadeTrailsArray (trails: Trail) : Trail =
+    System.Threading.Thread.Sleep(32)    
     let xs = trails |> Map.toArray
     let ys =
         [| for loc, pheromoneLevel in xs do
@@ -107,7 +108,12 @@ let FadeTrailsEmpty (trails: Trail) : Trail = trails
 let FadeTrailsMapFilter (trails: Trail) : Trail =
     trails |> Map.map (fun _ v -> (v * 0.995)) |> Map.filter (fun _ v -> v > 0.1)
 
+let rnd = System.Random(999)
+
 let FadeTrailsFold (trails: Trail) : Trail =
+    // let res = DeliberatelySlowLoop()
+    // if rnd.Next() = 0 then // ensure that the call is not optimised away
+    //     printf "rnd was zero, result is: %f" res
     trails
     |> Map.fold
         (fun acc key value ->

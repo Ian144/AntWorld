@@ -31,6 +31,8 @@ public partial class MainWindow : Window
 
     private const double TrailPointRadius = 16.0;
 
+    private int _frameCount = 0;
+    
     //private StreamWriter _logger;
     private readonly VisibleEntityCollection _dcol = new();
     private readonly Random _rnd = new();
@@ -135,7 +137,6 @@ public partial class MainWindow : Window
 
     private void DrawAntWorld(Types.AntWorld aw)
     {
-                
         myAntWorldDisplayControl.Dispatcher.Invoke(() =>
         {
             myAntWorldDisplayControl.Redraw();
@@ -170,21 +171,19 @@ public partial class MainWindow : Window
             }
 
             foreach (var ff in aw.trails)
-                if (RandDraw())
+            {
+                if (!RandDraw()) continue;
+                var convLoc = ConvertCoords(ff.Key.x, ff.Key.y, h, w, magnification);
+                var dp = new VisibleEntity
                 {
-                    var convLoc = ConvertCoords(ff.Key.x, ff.Key.y, h, w, magnification);
-                    var dp = new VisibleEntity
-                    {
-                        VariableX = convLoc.X,
-                        VariableY = convLoc.Y,
-                        Radius = TrailPointRadius * magnification,
-                        Type = EntityType.TrailPoint
-                    };
-            
-                    _dcol.DataPoints.Add(dp);
-                }
+                    VariableX = convLoc.X,
+                    VariableY = convLoc.Y,
+                    Radius = TrailPointRadius * magnification,
+                    Type = EntityType.TrailPoint
+                };
 
-            //var sb = new StringBuilder();
+                _dcol.DataPoints.Add(dp);
+            }
 
             foreach (var nest in aw.nests)
             {
@@ -209,44 +208,47 @@ public partial class MainWindow : Window
                 }
             }
 
-            //sb.AppendLine("---------------------");
-            //_logger.Write(sb.ToString());
-
-            // var allAnts = 
-            //     from nest in aw.nests
-            //     from ant in nest.Ants
-            //     select ant;
-            //
-            // var ants = allAnts as Types.Ant[] ?? allAnts.ToArray();
-            //
-            // var counts = new AntStateCounts();
-            //
-            // foreach (var ant in aw.nests.SelectMany(nest => nest.Ants))
-            // {
-            //     // Determine the ant's state and increment the corresponding counter
-            //     if (ant.state.IsReturnToNestHungary) counts.ReturnToNestHungaryCount++;
-            //     else if (ant.state.IsReturnToNestWithFood) counts.ReturnToNestWithFoodCount++;
-            //     else if (ant.state.IsSearchingForFood) counts.SearchingForFoodCount++;
-            //     else if (ant.state.IsFollowingTrail) counts.FollowingTrailCount++;
-            //     else if (ant.state.IsInNest) counts.InNestCount++;
-            //     else if (ant.state.IsDetectedFood) counts.DetectedFoodCount++;
-            //     else if (ant.state.IsGettingUnStuck) counts.GettingUnstuckCount++;
-            // }
-            //
-            // var msg =
-            //     string.Format(
-            //         "ReturnToNestHungary: {0}\nReturnToNestWithFood: {1}\nSearchingForFood: {2}\nFollowingTrail: {3}\nInNest: {4}\nDetectedFood: {5}\nGettingUnstuck: {6}\n\nnum trail points: {7}",
-            //         counts.ReturnToNestHungaryCount,
-            //         counts.ReturnToNestWithFoodCount,
-            //         counts.SearchingForFoodCount,
-            //         counts.FollowingTrailCount,
-            //         counts.InNestCount,
-            //         counts.DetectedFoodCount,
-            //         counts.GettingUnstuckCount,
-            //         aw.trails.Count);
-            //
-            // txtOutputAnts.Text = msg;
+            var msg = GetStatisticsString(aw);
+            txtOutputAnts.Text = msg;
+            
         });
+    }
+
+    private static string GetStatisticsString(Types.AntWorld aw)
+    {
+        var allAnts = 
+            from nest in aw.nests
+            from ant in nest.Ants
+            select ant;
+            
+        var ants = allAnts as Types.Ant[] ?? allAnts.ToArray();
+            
+        var counts = new AntStateCounts();
+            
+        foreach (var ant in aw.nests.SelectMany(nest => nest.Ants))
+        {
+            // Determine the ant's state and increment the corresponding counter
+            if (ant.state.IsReturnToNestHungary) counts.ReturnToNestHungaryCount++;
+            else if (ant.state.IsReturnToNestWithFood) counts.ReturnToNestWithFoodCount++;
+            else if (ant.state.IsSearchingForFood) counts.SearchingForFoodCount++;
+            else if (ant.state.IsFollowingTrail) counts.FollowingTrailCount++;
+            else if (ant.state.IsInNest) counts.InNestCount++;
+            else if (ant.state.IsDetectedFood) counts.DetectedFoodCount++;
+            else if (ant.state.IsGettingUnStuck) counts.GettingUnstuckCount++;
+        }
+            
+        var msg =
+            string.Format(
+                "ReturnToNestHungary: {0}\nReturnToNestWithFood: {1}\nSearchingForFood: {2}\nFollowingTrail: {3}\nInNest: {4}\nDetectedFood: {5}\nGettingUnstuck: {6}\n\nnum trail points: {7}",
+                counts.ReturnToNestHungaryCount,
+                counts.ReturnToNestWithFoodCount,
+                counts.SearchingForFoodCount,
+                counts.FollowingTrailCount,
+                counts.InNestCount,
+                counts.DetectedFoodCount,
+                counts.GettingUnstuckCount,
+                aw.trails.Count);
+        return msg;
     }
 
     private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
