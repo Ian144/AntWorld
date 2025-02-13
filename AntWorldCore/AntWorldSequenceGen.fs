@@ -82,10 +82,7 @@ let MakeAntWorldSeq (numAntsPerNest: int) (numNests: int) (numFoodItems: int) (n
     let GetRandLocationRange =
         fun () ->
             let fRange = float range
-
-            let gr () =
-                LanguagePrimitives.FloatWithMeasure<distance>(fRange * (randGen.NextDouble() * 2.0 - 1.0))
-
+            let gr () = LanguagePrimitives.FloatWithMeasure<distance>(fRange * (randGen.NextDouble() * 2.0 - 1.0))
             { x = gr (); y = gr () }
             
     let fadeTrails = match fadeTrailsOption with

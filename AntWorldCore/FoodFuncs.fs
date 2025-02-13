@@ -33,13 +33,8 @@ let HasReachedFood loc foodItem =
     let radius = CalcFoodItemRadius foodItem
     IsWithinCircle loc foodItem.loc radius
 
-
-
-// lazyily return the first food item detected (or none)
 let FoodDetected (loc: Location) (foodItems: FoodItem list) =
-    foodItems |> List.filter (IsFoodDetected loc) |> FirstOrNone
-
-
+    foodItems |> Seq.tryFind (IsFoodDetected loc)
 
 let TakeFood ant foodItem =
     let amountToTake =

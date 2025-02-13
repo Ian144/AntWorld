@@ -1,4 +1,6 @@
-﻿var antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(256, 1, 32, 64, 256, 1);
+﻿using System;
+
+var antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(256, 1, 32, 64, 256, 0);
 
 var ctr = 0;
 foreach (var aw in antWorldSeq)

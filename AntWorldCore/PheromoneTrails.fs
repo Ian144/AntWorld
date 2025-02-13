@@ -94,7 +94,6 @@ let DeliberatelySlowLoop () =
 
 //pheromone trails fade with time if not renewed
 let FadeTrailsArray (trails: Trail) : Trail =
-    System.Threading.Thread.Sleep(32)    
     let xs = trails |> Map.toArray
     let ys =
         [| for loc, pheromoneLevel in xs do
