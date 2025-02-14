@@ -114,28 +114,31 @@ let MoveFollowingTrail (ant: Ant) (aw: AntWorld) stepSize : Location * MoveVec =
     let surLocs =
         GetAllPossibleNextSteps ant.loc stepSize
         |> List.filter (CollisionFilter aw.obstacles)
-    // filter out surrounding locations closest to the nest unless current location is the nest
-    let surLocDistances =
-        surLocs
-        |> List.map (fun loc -> (loc, (LocationFuncs.CalcDistance loc ant.nestLoc)))
-        |> List.sortBy (fun (_, dist) -> 1.0 / dist)
+    
+    // why calculate this here? 
+    // let distancesFromNest =
+    //     surLocs
+    //     |> List.map (fun loc -> (loc, (LocationFuncs.CalcDistance loc ant.nestLoc)))
+    //     |> List.sortBy (fun (_, dist) -> 1.0 / dist)
 
-    let surLocDistances2 =
-        if ant.loc <> ant.nestLoc then
-            surLocDistances |> List.truncate 4 |> List.map (fun (loc, _) -> loc)
-        else
-            surLocDistances |> List.map (fun (loc, _) -> loc)
+    // let surLocDistances2 =
+    //     if ant.loc <> ant.nestLoc then
+    //         surLocDistances |> List.map fst
+    //     else
+    //         surLocDistances |> List.map fst
+            
     // sort remaining locations in order of highest pheromone level first
-    let surLocPhrmnLevels =
-        surLocDistances2
+    let highestPheromoneLevelLoc =
+        surLocs
         |> List.map (fun loc -> (loc, (GetPheromoneLevel loc aw.trails)))
-        |> List.sortBy (fun (_, pLevel) -> 1.0 / pLevel)
-
-    let highestPhrmnLevelLoc = fst (List.head surLocPhrmnLevels) // found the surrounding location with the highest level
+        |> List.maxBy (fun (_, pLevel) -> 1.0 / pLevel)
+        |> fst
+        
+    //let highestPhrmnLevelLoc = fst (List.head surLocPhrmnLevels) // found the surrounding location with the highest level
 
     let direction =
-        { dx = highestPhrmnLevelLoc.x - ant.loc.x
-          dy = highestPhrmnLevelLoc.y - ant.loc.y }
+        { dx = highestPheromoneLevelLoc.x - ant.loc.x
+          dy = highestPheromoneLevelLoc.y - ant.loc.y }
 
     let direction2 = LocationFuncs.ConstrainToStepSize direction antStepSize
 
