@@ -3,14 +3,13 @@ module FoodFuncs
 
 
 open Types
-open Utilities
 
 
 
 let AntMaxFoodItemCarryable = 1000<food>
 
 
-let CalcFoodItemRadius (foodItem: FoodItem) : float<distance> =
+let CalcFoodItemRadius(foodItem: FoodItem) : float<distance> =
     let rl = foodItem :> IRadLoc
     rl.GetRadius
 
@@ -34,7 +33,7 @@ let HasReachedFood loc foodItem =
     IsWithinCircle loc foodItem.loc radius
 
 let FoodDetected (loc: Location) (foodItems: FoodItem list) =
-    foodItems |> Seq.tryFind (IsFoodDetected loc)
+    foodItems |> Seq.tryFind(IsFoodDetected loc)
 
 let TakeFood ant foodItem =
     let amountToTake =
@@ -58,7 +57,7 @@ let TakeFood ant foodItem =
 // if some food has been take by an ant then the antWorlds foodItem list needs to be updated.
 // creates a new footItem list from the old list and the updated item
 let UpdateFoodItemList (foodList: FoodItem list) (updatedFoodItem: FoodItem) =
-    let SelectIfUpdate (item: FoodItem) =
+    let SelectIfUpdate(item: FoodItem) =
         if item.loc = updatedFoodItem.loc then
             updatedFoodItem
         else
@@ -66,4 +65,4 @@ let UpdateFoodItemList (foodList: FoodItem list) (updatedFoodItem: FoodItem) =
     // slot the updated fooditem into the list and remove any fooditems of zero size
     foodList
     |> List.map SelectIfUpdate
-    |> List.filter (fun fdItem -> fdItem.amountFood >= 0<food>)
+    |> List.filter(fun fdItem -> fdItem.amountFood >= 0<food>)

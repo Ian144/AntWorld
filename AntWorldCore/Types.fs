@@ -1,6 +1,5 @@
 ﻿module Types
 
-open System.Collections.Frozen
 
 
 [<Measure>]
@@ -44,7 +43,7 @@ type FoodItem =
 
         member this.GetRadius =
             let tmp = (float this.amountFood)
-            LanguagePrimitives.FloatWithMeasure<distance>(sqrt (tmp / System.Math.PI))
+            LanguagePrimitives.FloatWithMeasure<distance>(sqrt(tmp / System.Math.PI))
 
 type Obstacle =
     { radius: float<distance>
@@ -83,7 +82,7 @@ type Ant =
       state: AntState }
 
 
-let AntStateToString (ant: Ant) =
+let AntStateToString(ant: Ant) =
     match ant.state with
     | ReturnToNestHungary -> "ReturnToNestHungary"
     | ReturnToNestWithFood _ -> "ReturnToNestWithFood"
@@ -102,7 +101,7 @@ type Nest =
         member this.GetLoc = this.Loc
         member this.GetRadius = 4.0<distance>
 
-// todo F# Map be replaced with 
+// todo F# Map be replaced with
 type Trail = Map<Location, float>
 
 type AntWorld =

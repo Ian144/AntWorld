@@ -12,4 +12,4 @@ let CollisionTest (loc: Location) (obs: Obstacle) =
 let AnyCollisions (obstacles: Obstacle list) (locations: Location) =
     List.exists (CollisionTest locations) obstacles
 
-let CollisionFilter (obstacles: Obstacle list) (locations: Location) = not (AnyCollisions obstacles locations)
+let CollisionFilter (obstacles: Obstacle list) (locations: Location) = not(AnyCollisions obstacles locations)

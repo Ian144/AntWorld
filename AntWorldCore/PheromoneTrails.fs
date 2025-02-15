@@ -6,40 +6,51 @@ open Microsoft.FSharp.Collections
 
 let trailLocQuantisation = 4.0
 
+let trailLocQuantisationDistance = 1.0<distance> * trailLocQuantisation
+
+
 let TrailDetected (trail: Trail) loc =
     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
     let found, _ = trail.TryGetValue loc2
     found
 
-let GetSurroundingLocations (loc: Location) : Location list =
+// let GetSurroundingLocationsForLoop(loc: Location) : Location list =
+//     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
+//     let x = loc2.x
+//     let y = loc2.y
+//     let vecX = [ x - trailLocQuantisationDistance; x; x + trailLocQuantisationDistance ]
+//     let vecY = [ y - trailLocQuantisationDistance; y; y + trailLocQuantisationDistance ]
+//     [ for xx in vecX do
+//           for yy in vecY do
+//               if xx <> x || yy <> y then
+//                   yield { x = xx; y = yy } ] // Avoid computing center element
+
+// this is faster than using nested for-loops
+let GetSurroundingLocations(loc: Location) : Location list =
     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
     let x = loc2.x
     let y = loc2.y
-    let vecX =
-        [ x - 1.0<distance> * trailLocQuantisation
-          x
-          x + 1.0<distance> * trailLocQuantisation ]
-    let vecY =
-        [ y - 1.0<distance> * trailLocQuantisation
-          y
-          y + 1.0<distance> * trailLocQuantisation ]
-    let tmp =
-        [ for xx in vecX do
-              for yy in vecY do
-                  yield { x = xx; y = yy } ]
-    List.filter (fun ll -> ll <> loc2) tmp
+    let d = trailLocQuantisationDistance
+    [ { x = x - d; y = y - d }
+      { x = x - d; y = y     }
+      { x = x - d; y = y + d }
+      { x = x    ; y = y - d }
+      { x = x    ; y = y + d }
+      { x = x + d; y = y - d }
+      { x = x + d; y = y     }
+      { x = x + d; y = y + d } ]
 
 
 // get the nearest pheromone location not covered by an obstacle
 // occasionally there is no uncovered local location, returns a 'Location option' to represent this
 let GetNearestUncoveredPheromoneLocationIan (obstacles: Obstacle list) (location: Location) : Location option =
     let surLocs = GetSurroundingLocations location
-    let surLocs2 = List.filter (fun lc -> CollisionFilter obstacles lc) surLocs
+    let surLocs2 = List.filter (CollisionFilter obstacles) surLocs
 
     let surLocs3 =
         surLocs2
-        |> List.map (fun surLoc -> (surLoc, (LocationFuncs.CalcDistance surLoc location)))
-        |> List.sortBy (fun (_, dist) -> 1.0 / dist)
+        |> List.map(fun surLoc -> (surLoc, (LocationFuncs.CalcDistance surLoc location)))
+        |> List.sortBy(fun (_, dist) -> 1.0 / dist)
 
     match surLocs3 with
     | [] -> None
@@ -67,10 +78,12 @@ let GetNearestUncoveredPheromoneLocation (obstacles: Obstacle list) (location: L
 
 let UpdateTrail (trail: Trail) (obs: Obstacle list) (loc: Location) : Trail =
     let optLoc2 = GetNearestUncoveredPheromoneLocation obs loc
+
     match optLoc2 with
     | None -> trail
     | Some loc2 ->
         let found, oldVal = trail.TryGetValue loc2
+
         match found with
         | false -> trail.Add(loc2, 1.0)
         | true -> trail.Add(loc2, (1.0 + oldVal))
@@ -79,45 +92,30 @@ let UpdateTrail (trail: Trail) (obs: Obstacle list) (loc: Location) : Trail =
 let GetPheromoneLevel loc (trail: Trail) =
     let loc2 = LocationFuncs.QuantiseLocation loc trailLocQuantisation
     let found, level = trail.TryGetValue loc2
+
     match found with
     | false -> 0.0
     | true -> level
 
-// A deliberately slow for-loop to practice CPU profiling
-let DeliberatelySlowLoop () =
-    let mutable result = 0.0
-    for i in 1 .. 1000000 do
-        let x = float i ** 0.5 // Expensive square root
-        let y = sin x * cos x // Trigonometric operations
-        result <- result + y // Accumulate the result
-    result
-
 //pheromone trails fade with time if not renewed
-let FadeTrailsArray (trails: Trail) : Trail =
+let FadeTrailsArray(trails: Trail) : Trail =
     let xs = trails |> Map.toArray
+
     let ys =
         [| for loc, pheromoneLevel in xs do
                let pheromoneLevel2 = pheromoneLevel * 0.995
                if pheromoneLevel2 > 0.1 then
                    yield loc, pheromoneLevel2 |]
+
     ys |> Map.ofArray
 
-let FadeTrailsEmpty (trails: Trail) : Trail = trails
+let FadeTrailsEmpty(trails: Trail) : Trail = trails
 
-let FadeTrailsMapFilter (trails: Trail) : Trail =
-    trails |> Map.map (fun _ v -> (v * 0.995)) |> Map.filter (fun _ v -> v > 0.1)
+let FadeTrailsMapFilter(trails: Trail) : Trail =
+    trails |> Map.map(fun _ v -> (v * 0.995)) |> Map.filter(fun _ v -> v > 0.1)
 
-let rnd = System.Random(999)
-
-let FadeTrailsFold (trails: Trail) : Trail =
-    // let res = DeliberatelySlowLoop()
-    // if rnd.Next() = 0 then // ensure that the call is not optimised away
-    //     printf "rnd was zero, result is: %f" res
-    trails
-    |> Map.fold
-        (fun acc key value ->
-            let newValue = value * 0.995
-            if newValue > 0.1 then Map.add key newValue acc else acc)
-        Map.empty
-
-    
+let FadeTrailsFold(trails: Trail) : Trail =
+    trails |> Map.fold (fun acc key value ->
+                    let newValue = value * 0.995
+                    if newValue > 0.1 then Map.add key newValue acc else acc)
+                    Map.empty

@@ -32,6 +32,7 @@ let FeedResidentAnt (ant: Ant) (nest: Nest) =
                 AntState.SearchingForFood
                     { dx = 0.0<distance>
                       dy = 0.0<distance> } }
+
     let nest2 =
         { nest with
             FoodStore = nest.FoodStore - amountToEat }
@@ -83,13 +84,7 @@ let UpdateAntReturnToNestHungary (ant: Ant) (antWorld: AntWorld) (stepSize: floa
 
             (ant3, antWorld)
 
-let UpdateAntReturnToNestWithFood
-    (ant: Ant)
-    (foodCarried: int<food>)
-    (nest: Nest)
-    (antWorld: AntWorld)
-    (stepSize: float<distance>)
-    : Ant * Nest * AntWorld =
+let UpdateAntReturnToNestWithFood (ant: Ant) (foodCarried: int<food>) (nest: Nest) (antWorld: AntWorld) (stepSize: float<distance>) : Ant * Nest * AntWorld =
     if IsStuck ant then
         let ant2 =
             { ant with
@@ -104,8 +99,10 @@ let UpdateAntReturnToNestWithFood
             let ant2 =
                 { (UpdateLoc ant loc2) with
                     state = AntState.InNest }
+
             ant2,
-            { nest with FoodStore = nest.FoodStore + foodCarried },
+            { nest with
+                FoodStore = nest.FoodStore + foodCarried },
             antWorld
         else
             let trails2 = UpdateTrail antWorld.trails antWorld.obstacles loc2
@@ -120,12 +117,14 @@ let UpdateAntReturnToNestWithFood
 let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<distance>) : Ant =
     let loc2, direction = MoveFollowingTrail ant antWorld
     let optFd = FoodFuncs.FoodDetected ant.loc antWorld.foodItems
+
     match optFd with
     | Some foodItem ->
         { (UpdateLoc ant loc2) with
             state = DetectedFood foodItem }
     | None ->
         let found = TrailDetected antWorld.trails loc2
+
         match found with
         | true ->
             { (UpdateLoc ant loc2) with
@@ -138,16 +137,11 @@ let momentumFactor = 16.0
 
 
 // random walk with momentum for N frames (unStickCount), then revert to previous state
-let UpdateAntGettingUnStuck
-    (ant: Ant)
-    direction
-    oldState
-    unStickCount
-    (antWorld: AntWorld)
-    (stepSize: float<distance>)
-    =
+let UpdateAntGettingUnStuck (ant: Ant) direction oldState unStickCount (antWorld: AntWorld) (stepSize: float<distance>) =
     if unStickCount > 0 then
-        let loc2, dir2 = MoveWithMomentumAndCollisionDetection ant direction momentumFactor stepSize antWorld.obstacles
+        let loc2, dir2 =
+            MoveWithMomentumAndCollisionDetection ant direction momentumFactor stepSize antWorld.obstacles
+
         let ant2 =
             { ant with
                 loc = loc2
@@ -173,8 +167,11 @@ let UpdateAntGettingUnStuck
 // i.e. ants take the next step following a brownian motion weighted in the direction that they have been following.
 // ant might find food or a trail
 let UpdateAntSearchingForFood (ant: Ant) (direction: MoveVec) (antWorld: AntWorld) (stepSize: float<distance>) : Ant =
-    let loc2, direction = MoveWithMomentumAndCollisionDetection ant direction momentumFactor stepSize antWorld.obstacles
+    let loc2, direction =
+        MoveWithMomentumAndCollisionDetection ant direction momentumFactor stepSize antWorld.obstacles
+
     let optFd = FoodFuncs.FoodDetected loc2 antWorld.foodItems
+
     match optFd with
     | Some foodItem ->
         { (UpdateLoc ant loc2) with
@@ -189,6 +186,7 @@ let UpdateAntSearchingForFood (ant: Ant) (direction: MoveVec) (antWorld: AntWorl
         | false ->
             { (UpdateLoc ant loc2) with
                 state = SearchingForFood direction } // same state, different direction
+
 let UpdateAnt (ant: Ant) (nest: Nest) (antWorld: AntWorld) =
     match ant.state with
     | InNest ->
@@ -207,10 +205,14 @@ let UpdateAnt (ant: Ant) (nest: Nest) (antWorld: AntWorld) =
         let antTmp, antWorldTmp = UpdateAntReturnToNestHungary ant antWorld antStepSize
         (antTmp, nest, antWorldTmp)
     | ReturnToNestWithFood foodCarried ->
-        let antTmp, nestTmp, antWorldTmp = UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+        let antTmp, nestTmp, antWorldTmp =
+            UpdateAntReturnToNestWithFood ant foodCarried nest antWorld antStepSize
+
         (antTmp, nestTmp, antWorldTmp)
     | GettingUnStuck(oldState, unStuckCount, dir) ->
-        let antTmp, antWorldTmp = UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+        let antTmp, antWorldTmp =
+            UpdateAntGettingUnStuck ant dir oldState unStuckCount antWorld antStepSize
+
         (antTmp, nest, antWorldTmp)
 
 // a pure function on the outside, imperative on the inside, an alternative to the state monad
@@ -218,15 +220,17 @@ let rec UpdateAllAnts (ants: Ant list) (nest: Nest) (world: AntWorld) funcx =
     let mutable nest2 = nest
     let mutable world2 = world
     let antArray = ants |> Array.ofList // array elements are mutable
+
     for ctr = 0 to (antArray.Length - 1) do
         let ant = antArray.[ctr]
         let (antTmp, nestTmp, worldTmp) = funcx ant nest2 world2
         antArray.[ctr] <- antTmp
         nest2 <- nestTmp
         world2 <- worldTmp
+
     (antArray |> Array.toList, nest2, world2)
 
-let AntsUseUpFood (ants: Ant List) : Ant List =
+let AntsUseUpFood(ants: Ant List) : Ant List =
     [ for ant in ants do
           let ant' =
               { ant with
@@ -253,6 +257,7 @@ let AntsUseUpFood (ants: Ant List) : Ant List =
 let UpdateNest2 (nest: Nest) (world: AntWorld) : (Nest * AntWorld) =
     let ants = AntsUseUpFood nest.Ants // all ants burn up 1 food unit per iteration
     let ants2, nest2, world2 = UpdateAllAnts ants nest world UpdateAnt
+
     let nest3 =
         { Ants = ants2
           FoodStore = nest2.FoodStore

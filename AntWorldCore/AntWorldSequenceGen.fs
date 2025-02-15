@@ -26,11 +26,11 @@ let private NoOcclusionFoodObstacle (foodItems: FoodItem list) (ob: Obstacle) = 
 
 
 
-let private MakeFoodItemsLazy (getRandLoc: Unit -> Location) =
+let private MakeFoodItemsLazy(getRandLoc: Unit -> Location) =
     seq {
         while true do
             yield
-                { loc = getRandLoc ()
+                { loc = getRandLoc()
                   amountFood = 10000<food> }
     }
 
@@ -38,25 +38,25 @@ let private MakeFoodItemsLazy (getRandLoc: Unit -> Location) =
 let private MakeFoodItems numFoodItems (getRandLoc: Unit -> Location) =
     [ for n in 1..numFoodItems do
           yield
-              { loc = getRandLoc ()
+              { loc = getRandLoc()
                 amountFood = 10000<food> } ]
 
 
-let private MakeRandObstacle (getRandLoc: Unit -> Location) : Obstacle =
+let private MakeRandObstacle(getRandLoc: Unit -> Location) : Obstacle =
     let rad = LanguagePrimitives.FloatWithMeasure(randGen.NextDouble() * 50.0 + 25.0)
-    { radius = rad; loc = getRandLoc () }
+    { radius = rad; loc = getRandLoc() }
 
 
 // make obstacles that do not cover any food items or nests
 let private MakeObstacles numObstacles foodItems nests (getRandLoc: Unit -> Location) =
     [ 1..numObstacles ]
-    |> List.map (fun _ -> MakeRandObstacle getRandLoc)
-    |> List.filter (NoOcclusionFoodObstacle foodItems)
-    |> List.filter (NoOcclusionObstacleNest nests)
+    |> List.map(fun _ -> MakeRandObstacle getRandLoc)
+    |> List.filter(NoOcclusionFoodObstacle foodItems)
+    |> List.filter(NoOcclusionObstacleNest nests)
 
 
 let private MakeNest (numAnts: int) getRandLoc =
-    let nestLoc = getRandLoc ()
+    let nestLoc = getRandLoc()
 
     let ant1 =
         { foodStored = 1<food>
@@ -82,15 +82,19 @@ let MakeAntWorldSeq (numAntsPerNest: int) (numNests: int) (numFoodItems: int) (n
     let GetRandLocationRange =
         fun () ->
             let fRange = float range
-            let gr () = LanguagePrimitives.FloatWithMeasure<distance>(fRange * (randGen.NextDouble() * 2.0 - 1.0))
-            { x = gr (); y = gr () }
-            
-    let fadeTrails = match fadeTrailsOption with
-                        | 0 -> PheromoneTrails.FadeTrailsFold
-                        | 1 -> PheromoneTrails.FadeTrailsArray
-                        | 2 -> PheromoneTrails.FadeTrailsMapFilter
-                        | _ -> PheromoneTrails.FadeTrailsFold
-    
+
+            let gr() =
+                LanguagePrimitives.FloatWithMeasure<distance>(fRange * (randGen.NextDouble() * 2.0 - 1.0))
+
+            { x = gr(); y = gr() }
+
+    let fadeTrails =
+        match fadeTrailsOption with
+        | 0 -> PheromoneTrails.FadeTrailsFold
+        | 1 -> PheromoneTrails.FadeTrailsArray
+        | 2 -> PheromoneTrails.FadeTrailsMapFilter
+        | _ -> PheromoneTrails.FadeTrailsFold
+
     let nests = MakeNests numNests numAntsPerNest GetRandLocationRange
     let foodItems = MakeFoodItems numFoodItems GetRandLocationRange
     let obstacles = MakeObstacles numObstacles foodItems nests GetRandLocationRange
@@ -106,5 +110,5 @@ let MakeAntWorldSeq (numAntsPerNest: int) (numNests: int) (numFoodItems: int) (n
     seq {
         while true do
             yield initialAntWorld
-            initialAntWorld <- UpdateWorld initialAntWorld fadeTrails 
+            initialAntWorld <- UpdateWorld initialAntWorld fadeTrails
     }
