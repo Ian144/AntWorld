@@ -94,11 +94,13 @@ let MoveTowardsWithCollisionDetection destLoc loc stepSize obstacles =
         surLocs3 |> Seq.maxBy snd |> fst
 
 let MoveFollowingTrail (ant: Ant) (aw: AntWorld) : Location * MoveVec =
-    let surLocs = GetAllPossibleNextSteps ant.loc |> Seq.filter(CollisionFilter aw.obstacles)
+    // a location will not have a pheromone if it has an obstacle on it, so not testing for collisions    
+    let surLocs = GetAllPossibleNextSteps ant.loc
 
     // sort remaining locations in order of highest pheromone level first
     let highestPheromoneLevelLoc =
         surLocs
+        |> Seq.filter (fun loc -> not (List.contains loc ant.prevLocs))
         |> Seq.map(fun loc -> (loc, (GetPheromoneLevel loc aw.trails)))
         |> Seq.maxBy(fun (_, pLevel) -> 1.0 / pLevel)
         |> fst
