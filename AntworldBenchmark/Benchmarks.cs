@@ -17,7 +17,8 @@ public class Benchmarks
     private IEnumerable<Types.AntWorld>? _antWorldSeq;
 
     [Params(FadeFunc.FadeTrailsFold, FadeFunc.FadeTrailsArray, FadeFunc.FadeTrailsMapFilter)]
-    public FadeFunc FadeTrailsOption { get; set; }
+    
+   public FadeFunc FadeTrailsOption { get; set; }
 
     [IterationSetup]
     public void IterSetup()
@@ -28,6 +29,6 @@ public class Benchmarks
     [Benchmark]
     public List<Types.AntWorld> OneKIterations()
     {
-        return _antWorldSeq!.Take(1024).ToList();
+        return _antWorldSeq!.Take(128).ToList();
     }
 }

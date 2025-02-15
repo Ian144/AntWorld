@@ -118,7 +118,7 @@ let UpdateAntReturnToNestWithFood
 // if the ant walks off the end of the trail state becomes UpdateAntSearchingForFood
 // trails are collision free
 let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<distance>) : Ant =
-    let loc2, direction = MoveFollowingTrail ant antWorld stepSize
+    let loc2, direction = MoveFollowingTrail ant antWorld
     let optFd = FoodFuncs.FoodDetected ant.loc antWorld.foodItems
     match optFd with
     | Some foodItem ->
@@ -126,7 +126,6 @@ let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<dis
             state = DetectedFood foodItem }
     | None ->
         let found = TrailDetected antWorld.trails loc2
-
         match found with
         | true ->
             { (UpdateLoc ant loc2) with
@@ -134,7 +133,6 @@ let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<dis
         | false ->
             { (UpdateLoc ant loc2) with
                 state = SearchingForFood direction } // in case the ant as walked off the end of a fading trail
-
 
 let momentumFactor = 16.0
 

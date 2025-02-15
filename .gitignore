@@ -264,3 +264,6 @@ __pycache__/
 # speedscope
 *.speedscope.json
 *.nettrace
+
+.DS_Store
+BenchmarkDotNet.Artifacts/

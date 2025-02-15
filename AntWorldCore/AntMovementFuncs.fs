@@ -17,7 +17,7 @@ let UpdateLoc (ant: Ant) newLoc =
 
 let IsStuck (ant: Ant) =
     if ant.prevLocs.Length = isStuckLookback then
-        let last = List.rev ant.prevLocs |> List.head
+        let last = Seq.rev ant.prevLocs |> Seq.head
         let distMoved = LocationFuncs.CalcDistance ant.loc last
         distMoved < (antStepSize * (float isStuckLookback) * isStuckDetectionFactor)
     else
@@ -40,14 +40,11 @@ let GetRandomMoveVec () =
 let MoveTowards (destLoc: Location) (curLoc: Location) (stepSize: float<distance>) : Location =
     let distance = LocationFuncs.CalcDistance destLoc curLoc
     let angle = LocationFuncs.CalcAngle destLoc curLoc
-
     if distance >= stepSize then
-        { x = curLoc.x + stepSize * cos (angle)
-          y = curLoc.y + stepSize * sin (angle) }
+        { x = curLoc.x + stepSize * cos angle
+          y = curLoc.y + stepSize * sin angle }
     else
         destLoc
-
-
 
 // see MoveTowardsRnd comment
 let MoveTowardsRndImpl
@@ -58,7 +55,6 @@ let MoveTowardsRndImpl
     : Location =
     if rndMove () then
         let randMove = GetRandomMoveVec()
-
         { curLoc with
             x = curLoc.x + randMove.dx
             y = curLoc.y + randMove.dy }
@@ -76,65 +72,41 @@ let MoveTowardsRnd = MoveTowardsRndImpl OneInTen
 let surroundingStepDirections =
     let vecX = [ -1.0<distance>; 0.0<distance>; 1.0<distance> ]
     let vecY = vecX
-
     let tmp1 =
-        [ for xx in vecX do
-              for yy in vecY do
-                  yield { dx = xx; dy = yy } ]
-
+        [| for xx in vecX do
+               for yy in vecY do
+                   yield { dx = xx; dy = yy } |]
     let tmp2 = List.truncate 4 tmp1 @ List.skip 5 tmp1 // remove the center, only want surrounding steps
-    List.map (fun mv -> LocationFuncs.ConstrainToStepSize mv antStepSize) tmp2
+    Seq.map (fun mv -> LocationFuncs.ConstrainToStepSize mv antStepSize) tmp2
 
 
-let GetAllPossibleNextSteps (loc: Location) stepSize : Location list =
-    List.map (fun mv -> { x = loc.x + mv.dx; y = loc.y + mv.dy }) surroundingStepDirections
-
-
+let GetAllPossibleNextSteps (loc: Location) : Location seq =
+    Seq.map (fun mv -> { x = loc.x + mv.dx; y = loc.y + mv.dy }) surroundingStepDirections
 
 let MoveTowardsWithCollisionDetection destLoc loc stepSize obstacles =
     let loc2 = MoveTowards destLoc loc stepSize
-    let colObs = obstacles |> List.filter (CollisionTest loc2)
+    let collisionObstacles: Obstacle seq = obstacles |> Seq.filter (CollisionTest loc2)
 
-    match colObs with
-    | [] -> loc2 // no collision
-    | _ ->
-        let surLocs = GetAllPossibleNextSteps loc stepSize // there has been a collision with an obstacle
+    match Seq.isEmpty collisionObstacles with
+    | true -> loc2 // no collision
+    | false ->
+        let surLocs = GetAllPossibleNextSteps loc // there has been a collision with an obstacle
         let collisionFilter loc = not (AnyCollisions obstacles loc)
-        let surLocs2 = surLocs |> List.filter collisionFilter // get 'collision free' surrounding locations
+        let surLocs2 = surLocs |> Seq.filter collisionFilter // get 'collision free' surrounding locations
+        let surLocs3 = surLocs2 |> Seq.map (fun loc -> (loc, LocationFuncs.CalcDistance loc destLoc)) // sort potential next steps by distance from destination and pick the best
+        surLocs3 |> Seq.maxBy snd |> fst
 
-        let surLocs3 =
-            surLocs2 |> List.map (fun loc -> (loc, LocationFuncs.CalcDistance loc destLoc)) // sort potential next steps by distance from destination and pick the best
-
-        let surLocs4 = surLocs3 |> List.sortBy (fun (loc, dist) -> dist)
-        fst surLocs4.Head
-
-
-
-let MoveFollowingTrail (ant: Ant) (aw: AntWorld) stepSize : Location * MoveVec =
+let MoveFollowingTrail (ant: Ant) (aw: AntWorld)  : Location * MoveVec =
     let surLocs =
-        GetAllPossibleNextSteps ant.loc stepSize
-        |> List.filter (CollisionFilter aw.obstacles)
-    
-    // why calculate this here? 
-    // let distancesFromNest =
-    //     surLocs
-    //     |> List.map (fun loc -> (loc, (LocationFuncs.CalcDistance loc ant.nestLoc)))
-    //     |> List.sortBy (fun (_, dist) -> 1.0 / dist)
-
-    // let surLocDistances2 =
-    //     if ant.loc <> ant.nestLoc then
-    //         surLocDistances |> List.map fst
-    //     else
-    //         surLocDistances |> List.map fst
-            
+        GetAllPossibleNextSteps ant.loc 
+        |> Seq.filter (CollisionFilter aw.obstacles)
+           
     // sort remaining locations in order of highest pheromone level first
     let highestPheromoneLevelLoc =
         surLocs
-        |> List.map (fun loc -> (loc, (GetPheromoneLevel loc aw.trails)))
-        |> List.maxBy (fun (_, pLevel) -> 1.0 / pLevel)
+        |> Seq.map (fun loc -> (loc, (GetPheromoneLevel loc aw.trails)))
+        |> Seq.maxBy (fun (_, pLevel) -> 1.0 / pLevel)
         |> fst
-        
-    //let highestPhrmnLevelLoc = fst (List.head surLocPhrmnLevels) // found the surrounding location with the highest level
 
     let direction =
         { dx = highestPheromoneLevelLoc.x - ant.loc.x
