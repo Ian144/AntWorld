@@ -59,21 +59,14 @@ let GetNearestUncoveredPheromoneLocationIan (obstacles: Obstacle list) (location
 // imperative on the inside
 let GetNearestUncoveredPheromoneLocation (obstacles: Obstacle list) (location: Location) : Location option =
     let surLocs = GetSurroundingLocations location
-    // Use a 'max' distance as a float<distance> for comparisons.
-    // One way is LanguagePrimitives.FloatWithMeasure to embed System.Double.MaxValue.
-    let mutable bestDist =
-        LanguagePrimitives.FloatWithMeasure<distance> System.Double.MaxValue
-
+    let mutable bestDist = LanguagePrimitives.FloatWithMeasure<distance> System.Double.MaxValue
     let mutable bestLocation = None
-
     for candidate in surLocs do
         if CollisionFilter obstacles candidate then
             let dist = LocationFuncs.CalcDistance candidate location
-
             if dist < bestDist then
                 bestDist <- dist
                 bestLocation <- Some candidate
-
     bestLocation
 
 let UpdateTrail (trail: Trail) (obs: Obstacle list) (loc: Location) : Trail =
@@ -97,13 +90,17 @@ let GetPheromoneLevel loc (trail: Trail) =
     | false -> 0.0
     | true -> level
 
+
+let fadeFactor = 0.9985
+let minLevel = 0.05
+
 //pheromone trails fade with time if not renewed
 let FadeTrailsArray(trails: Trail) : Trail =
     let xs = trails |> Map.toArray
 
     let ys =
         [| for loc, pheromoneLevel in xs do
-               let pheromoneLevel2 = pheromoneLevel * 0.995
+               let pheromoneLevel2 = pheromoneLevel * fadeFactor
                if pheromoneLevel2 > 0.1 then
                    yield loc, pheromoneLevel2 |]
 
@@ -112,10 +109,10 @@ let FadeTrailsArray(trails: Trail) : Trail =
 let FadeTrailsEmpty(trails: Trail) : Trail = trails
 
 let FadeTrailsMapFilter(trails: Trail) : Trail =
-    trails |> Map.map(fun _ v -> (v * 0.995)) |> Map.filter(fun _ v -> v > 0.1)
+    trails |> Map.map(fun _ v -> (v * fadeFactor)) |> Map.filter(fun _ v -> v > minLevel)
 
 let FadeTrailsFold(trails: Trail) : Trail =
     trails |> Map.fold (fun acc key value ->
-                    let newValue = value * 0.995
-                    if newValue > 0.1 then Map.add key newValue acc else acc)
+                    let newValue = value * fadeFactor
+                    if newValue > minLevel then Map.add key newValue acc else acc)
                     Map.empty

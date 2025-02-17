@@ -18,11 +18,15 @@ type IMyInterface =
     abstract GetValue: unit -> string
 
 // x and y co-ordinates of a location
-[<StructuralComparison>]
-[<StructuralEquality>]
+// trying as a value type to reduce GC pressure
+//[<Struct; StructuralEquality; StructuralComparison>]
 type Location =
     { x: float<distance>
       y: float<distance> }
+    
+    // todo, change x and y to int<distance>
+    // then remove quantisation
+    
 
 // multiple types can be 'bumped into', IRadLoc enables the different 'bumpable' types to be treated in the same way
 // todo - think of a better name for this

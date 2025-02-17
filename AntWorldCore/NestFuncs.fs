@@ -222,9 +222,9 @@ let rec UpdateAllAnts (ants: Ant list) (nest: Nest) (world: AntWorld) funcx =
     let antArray = ants |> Array.ofList // array elements are mutable
 
     for ctr = 0 to (antArray.Length - 1) do
-        let ant = antArray.[ctr]
+        let ant = antArray[ctr]
         let (antTmp, nestTmp, worldTmp) = funcx ant nest2 world2
-        antArray.[ctr] <- antTmp
+        antArray[ctr] <- antTmp
         nest2 <- nestTmp
         world2 <- worldTmp
 
