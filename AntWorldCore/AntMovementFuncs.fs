@@ -11,7 +11,6 @@ let isStuckDetectionFactor = 0.2
 
 let UpdateLoc (ant: Ant) newLoc =
     let prevLocs2 = newLoc :: (List.truncate (isStuckLookback - 1) ant.prevLocs)
-
     { ant with
         prevLocs = prevLocs2
         loc = newLoc }

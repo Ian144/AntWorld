@@ -18,8 +18,8 @@ public class Benchmarks
     [Params(FadeFunc.FadeTrailsFold)]
     public FadeFunc FadeTrailsOption { get; set; }
     
-    //[Params(128, 256, 512)]
-    [Params(1024)]
+    [Params(128, 256, 512)]
+    //[Params(1024)]
     public int NumTimeIterations { get; set; }
     
     [IterationSetup]
