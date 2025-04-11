@@ -18,13 +18,13 @@ public class Benchmarks
     [Params(FadeFunc.FadeTrailsFold)]
     public FadeFunc FadeTrailsOption { get; set; }
     
-    [Params(128, 256, 512)]
+    [Params(256)]
     //[Params(1024)]
-    public int NumTimeIterations { get; set; }
+    public int NumTimeSteps { get; set; }
     
     [IterationSetup]
     public void IterSetup() => _antWorldSeq = AntWorldEntryPoint.MakeAntWorldSeq(256, 4, 64, 64, 256, (int)FadeTrailsOption);
 
     [Benchmark]
-    public List<Types.AntWorld> RunWorldGeneration() => _antWorldSeq!.Take(NumTimeIterations).ToList();
+    public List<Types.AntWorld> RunWorldGeneration() => _antWorldSeq!.Take(NumTimeSteps).ToList();
 }

@@ -14,9 +14,6 @@ type health
 [<Measure>]
 type time
 
-type IMyInterface =
-    abstract GetValue: unit -> string
-
 // x and y co-ordinates of a location
 // trying as a value type to reduce GC pressure
 //[<Struct; StructuralEquality; StructuralComparison>]
@@ -34,6 +31,9 @@ type Location =
 type IRadLoc =
     abstract GetLoc: Location
     abstract GetRadius: float<distance>
+
+
+
 
 
 // food item radius - amount food is proportional to area, which is a circle

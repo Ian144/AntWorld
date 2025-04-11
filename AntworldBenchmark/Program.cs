@@ -12,8 +12,8 @@ var config = ManualConfig
     .Create(DefaultConfig.Instance)
     .AddColumn(StatisticColumn.Median) // Add Median column
     .WithSummaryStyle(SummaryStyle.Default.WithRatioStyle(RatioStyle.Trend))
-    .AddJob(Job.LongRun.WithRuntime(CoreRuntime.Core80).WithGcServer(true).WithId("ServerGC"))
-    .AddJob(Job.LongRun.WithRuntime(CoreRuntime.Core80).WithGcServer(false).WithId("WorkstationGC"));
+    .AddJob(Job.MediumRun.WithRuntime(CoreRuntime.Core80).WithGcServer(true).WithId("ServerGC"))
+    .AddJob(Job.MediumRun.WithRuntime(CoreRuntime.Core80).WithGcServer(false).WithId("WorkstationGC"));
 
 // var config = DefaultConfig.Instance
 //     .AddColumn(StatisticColumn.Median) // Add Median column

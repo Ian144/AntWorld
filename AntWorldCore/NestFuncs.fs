@@ -15,7 +15,6 @@ let AntFoodLevelSearchStart = AntMaxFoodCapacity / 2
 // "Food store is low, give up search and return for more food" threshold
 let AntFoodSearchEndThreshold = 10<food>
 
-
 let FeedResidentAnt (ant: Ant) (nest: Nest) =
     let antFoodRoom = AntMaxFoodCapacity - ant.foodStored
     let availableFood = nest.FoodStore
@@ -32,7 +31,6 @@ let FeedResidentAnt (ant: Ant) (nest: Nest) =
                 AntState.SearchingForFood
                     { dx = 0.0<distance>
                       dy = 0.0<distance> } }
-
     let nest2 =
         { nest with
             FoodStore = nest.FoodStore - amountToEat }
@@ -124,7 +122,6 @@ let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<dis
             state = DetectedFood foodItem }
     | None ->
         let found = TrailDetected antWorld.trails loc2
-
         match found with
         | true ->
             { (UpdateLoc ant loc2) with
@@ -134,7 +131,6 @@ let UpdateAntFollowingTrail (ant: Ant) (antWorld: AntWorld) (stepSize: float<dis
                 state = SearchingForFood direction } // in case the ant as walked off the end of a fading trail
 
 let momentumFactor = 16.0
-
 
 // random walk with momentum for N frames (unStickCount), then revert to previous state
 let UpdateAntGettingUnStuck (ant: Ant) direction oldState unStickCount (antWorld: AntWorld) (stepSize: float<distance>) =

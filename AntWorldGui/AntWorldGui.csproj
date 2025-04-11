@@ -5,10 +5,11 @@
         <TargetFramework>net8.0-windows</TargetFramework>
         <UseWPF>true</UseWPF>
         <UseWindowsForms>true</UseWindowsForms>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     </PropertyGroup>
 
     <ItemGroup><!-- Add your project dependencies here -->
-
         <ProjectReference Include="..\AntWorldCore\AntWorldCore.fsproj"/>
     </ItemGroup>
 
